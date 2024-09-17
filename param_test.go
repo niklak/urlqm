@@ -128,3 +128,44 @@ func TestSortOrderParams(t *testing.T) {
 		})
 	}
 }
+
+func TestGetParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantValue string
+		wantErr   bool
+	}{
+		{
+			name:      "Not found",
+			args:      args{query: "a=1&b=2&c=3", key: "d"},
+			wantValue: "",
+		},
+		{
+			name:      "Found",
+			args:      args{query: "a=1&b=2&c=3", key: "b"},
+			wantValue: "2",
+		},
+		{
+			name:      "encoded",
+			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantValue: `"daily news"`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotValue, err := GetParam(tt.args.query, tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ParseParams() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotValue, tt.wantValue) {
+				t.Errorf("GetParam() = %v, want %v", gotValue, tt.wantValue)
+			}
+		})
+	}
+}
