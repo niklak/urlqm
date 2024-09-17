@@ -102,9 +102,9 @@ func PopParam(query *string, key string) (value string) {
 
 // GetParam returns the value of a parameter from query string.
 func GetParam(query string, key string) (value string, err error) {
-	_, after, found := strings.Cut(query, key+"=")
+	_, after, _ := strings.Cut(query, key+"=")
 	//if the given param wasn't found or it was without value
-	if !found || after == "" {
+	if after == "" {
 		return
 	}
 
@@ -113,4 +113,20 @@ func GetParam(query string, key string) (value string, err error) {
 	return
 }
 
-// TODO: GetParams
+func GetParamValues(query, key string) (values []string, err error) {
+
+	values = make([]string, 0)
+	for query != "" {
+		_, query, _ = strings.Cut(query, key+"=")
+		if query == "" {
+			break
+		}
+		value, _, _ := strings.Cut(query, "&")
+		if value, err = url.QueryUnescape(value); err != nil {
+			return nil, err
+		}
+		values = append(values, value)
+	}
+
+	return
+}
