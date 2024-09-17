@@ -5,10 +5,12 @@ import (
 	"strings"
 )
 
+// QueryParam represents a key-value pair in a URL query string.
 type QueryParam struct {
 	Key, Value string
 }
 
+// EncodeParams takes a slice of QueryParam and returns the encoded query string.
 func EncodeParams(params []QueryParam) string {
 	if params == nil {
 		return ""
@@ -26,12 +28,13 @@ func EncodeParams(params []QueryParam) string {
 	return buf.String()
 }
 
+// ParseParams takes a query string and returns a slice of QueryParam.
 func ParseParams(query string) (values []QueryParam, err error) {
+
 	values = make([]QueryParam, 0)
 	for query != "" {
 		var key string
-		key, query, _ = strings.Cut(query, "&")
-
+		key, query, _ = cutStringByAnySep(query, "&;")
 		if key == "" {
 			continue
 		}
@@ -55,7 +58,8 @@ func ParseParams(query string) (values []QueryParam, err error) {
 	return
 }
 
-func SortParams(paramsPtr *[]QueryParam, order []string) {
+// SortParams sorts the QueryParam slice based on the provided order members.
+func SortParams(paramsPtr *[]QueryParam, order ...string) {
 
 	restParams := *paramsPtr
 	ordered := make([]QueryParam, 0, len(restParams))
@@ -73,8 +77,9 @@ func SortParams(paramsPtr *[]QueryParam, order []string) {
 	*paramsPtr = ordered
 }
 
-func PopParam(rawQuery *string, key string) (value string) {
-	before, after, found := strings.Cut(*rawQuery, key+"=")
+// PopParam removes and returns the value of a parameter from query string.
+func PopParam(query *string, key string) (value string) {
+	before, after, found := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
 	if !found || after == "" {
 		return
@@ -91,12 +96,13 @@ func PopParam(rawQuery *string, key string) (value string) {
 	}
 	buf.WriteString(after)
 
-	*rawQuery = buf.String()
+	*query = buf.String()
 	return
 }
 
-func GetParam(rawQuery string, key string) (value string) {
-	_, after, found := strings.Cut(rawQuery, key+"=")
+// GetParam returns the value of a parameter from query string.
+func GetParam(query string, key string) (value string) {
+	_, after, found := strings.Cut(query, key+"=")
 	//if the given param wasn't found or it was without value
 	if !found || after == "" {
 		return
