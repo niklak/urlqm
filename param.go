@@ -16,11 +16,10 @@ func EncodeParams(params []QueryParam) string {
 	var buf strings.Builder
 
 	for _, param := range params {
-		keyEscaped := url.QueryEscape(param.Key)
 		if buf.Len() > 0 {
 			buf.WriteByte('&')
 		}
-		buf.WriteString(keyEscaped)
+		buf.WriteString(url.QueryEscape(param.Key))
 		buf.WriteByte('=')
 		buf.WriteString(url.QueryEscape(param.Value))
 	}
