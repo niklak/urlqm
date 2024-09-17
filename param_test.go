@@ -91,3 +91,40 @@ func TestParseParams(t *testing.T) {
 		})
 	}
 }
+
+func TestSortOrderParams(t *testing.T) {
+	type args struct {
+		params []QueryParam
+		order  []string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantValues []QueryParam
+	}{
+		{
+			name:       "No order",
+			args:       args{params: []QueryParam{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}}, order: nil},
+			wantValues: []QueryParam{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+		},
+		{
+			name:       "With priority param",
+			args:       args{params: []QueryParam{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q"}},
+			wantValues: []QueryParam{{"q", "3"}, {"b", "2"}, {"a", "1"}},
+		},
+		{
+			name:       "With full order",
+			args:       args{params: []QueryParam{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q", "a", "b"}},
+			wantValues: []QueryParam{{"q", "3"}, {"a", "1"}, {"b", "2"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SortOrderParams(&tt.args.params, tt.args.order...)
+			gotValues := tt.args.params
+			if !reflect.DeepEqual(gotValues, tt.wantValues) {
+				t.Errorf("SortParams() = %v, want %v", gotValues, tt.wantValues)
+			}
+		})
+	}
+}
