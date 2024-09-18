@@ -192,6 +192,11 @@ func TestGetParamValues(t *testing.T) {
 			wantValues: []string{},
 		},
 		{
+			name:       "Found empty",
+			args:       args{query: "a=1&b=&c=3", key: "b"},
+			wantValues: []string{""},
+		},
+		{
 			name:       "Found multiple values",
 			args:       args{query: "a=1&b=2&c=3&d=4&b=5&e=6", key: "b"},
 			wantValues: []string{"2", "5"},
@@ -206,6 +211,48 @@ func TestGetParamValues(t *testing.T) {
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
 				t.Errorf("GetParamValues() = %v, want %v", gotValues, tt.wantValues)
+			}
+		})
+	}
+}
+
+func TestPopParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantValue string
+		wantQuery string
+	}{
+		{
+			name:      "Not found",
+			args:      args{query: "a=1&b=2&c=3", key: "d"},
+			wantValue: "",
+			wantQuery: "a=1&b=2&c=3",
+		},
+		{
+			name:      "Found",
+			args:      args{query: "a=1&b=2&c=3&d=4", key: "b"},
+			wantValue: "2",
+			wantQuery: "a=1&c=3&d=4",
+		},
+		{
+			name:      "Found empty",
+			args:      args{query: "a=1&b=&c=3&d=4", key: "b"},
+			wantValue: "",
+			wantQuery: "a=1&c=3&d=4",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotValue := PopParam(&tt.args.query, tt.args.key); gotValue != tt.wantValue {
+				t.Errorf("PopParam() = %v, want %v", gotValue, tt.wantValue)
+			}
+			if tt.args.query != tt.wantQuery {
+				t.Errorf("PopParam() query = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
