@@ -383,5 +383,3 @@ func TestPopParamValues(t *testing.T) {
 		})
 	}
 }
-
-// TODO: add tests cases with errors
