@@ -34,7 +34,7 @@ func ParseParams(query string) (values []QueryParam, err error) {
 	values = make([]QueryParam, 0)
 	for query != "" {
 		var key string
-		key, query, _ = cutStringByAnySep(query, "&;")
+		key, query = cutStringByAnySep(query, "&;")
 		if key == "" {
 			continue
 		}
@@ -77,22 +77,23 @@ func SortOrderParams(paramsPtr *[]QueryParam, order ...string) {
 	*paramsPtr = ordered
 }
 
-// PopParam removes and returns the value of a parameter from query string.
+// PopParam removes and returns the value of a parameter from the query string.
 func PopParam(query *string, key string) (value string) {
-	before, after, found := strings.Cut(*query, key+"=")
+	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
-	if !found || after == "" {
+	if after == "" {
 		return
 	}
 
-	before = strings.TrimSuffix(before, "&")
+	var sep string
 
+	before, sep = trimParamSeparator(before)
 	buf := strings.Builder{}
 	buf.WriteString(before)
 
-	value, after, _ = strings.Cut(after, "&")
+	value, after = cutStringByAnySep(after, separators)
 	if buf.Len() > 0 && after != "" {
-		buf.WriteString("&")
+		buf.WriteString(sep)
 	}
 	buf.WriteString(after)
 
@@ -100,7 +101,7 @@ func PopParam(query *string, key string) (value string) {
 	return
 }
 
-// GetParam returns the value of a parameter from query string.
+// GetParam returns the value of a parameter from the query string.
 func GetParam(query string, key string) (value string, err error) {
 	_, after, _ := strings.Cut(query, key+"=")
 	//if the given param wasn't found or it was without value
@@ -108,11 +109,12 @@ func GetParam(query string, key string) (value string, err error) {
 		return
 	}
 
-	value, _, _ = strings.Cut(after, "&")
+	value, _ = cutStringByAnySep(after, separators)
 	value, err = url.QueryUnescape(value)
 	return
 }
 
+// GetParamValues returns the slice of values for a parameter from the query string.
 func GetParamValues(query, key string) (values []string, err error) {
 
 	values = make([]string, 0)
@@ -121,7 +123,7 @@ func GetParamValues(query, key string) (values []string, err error) {
 		if query == "" {
 			break
 		}
-		value, _, _ := strings.Cut(query, "&")
+		value, _ := cutStringByAnySep(query, separators)
 		if value, err = url.QueryUnescape(value); err != nil {
 			return nil, err
 		}

@@ -1,11 +1,28 @@
 package urlp
 
-import "strings"
+import (
+	"strings"
+)
 
-func cutStringByAnySep(s string, sep string) (before string, after string, found bool) {
+var paramSep = "&"
+var deprecatedParamSep = ";"
+var separators = "&;"
 
-	if i := strings.IndexAny(s, sep); i >= 0 {
-		return s[:i], s[i+1:], true
+func cutStringByAnySep(s string, seps string) (
+	before string, after string) {
+
+	if i := strings.IndexAny(s, seps); i >= 0 {
+		return s[:i], s[i+1:]
 	}
-	return s, "", false
+	return s, ""
+}
+
+func trimParamSeparator(s string) (string, string) {
+
+	if strings.HasSuffix(s, paramSep) || strings.HasSuffix(s, deprecatedParamSep) {
+		// length of suffix is always 1
+		return s[:len(s)-1], s[len(s)-1:]
+	}
+
+	return s, ""
 }

@@ -156,6 +156,11 @@ func TestGetParam(t *testing.T) {
 			wantValue: "2",
 		},
 		{
+			name:      "Found with deprecated separator",
+			args:      args{query: "a=1;b=2;c=3", key: "b"},
+			wantValue: "2",
+		},
+		{
 			name:      "encoded",
 			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
 			wantValue: `"daily news"`,
@@ -201,6 +206,11 @@ func TestGetParamValues(t *testing.T) {
 			args:       args{query: "a=1&b=2&c=3&d=4&b=5&e=6", key: "b"},
 			wantValues: []string{"2", "5"},
 		},
+		{
+			name:       "Found multiple values with deprecated separator",
+			args:       args{query: "a=1;b=2;c=3;d=4;b=5;e=6", key: "b"},
+			wantValues: []string{"2", "5"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -244,6 +254,24 @@ func TestPopParam(t *testing.T) {
 			args:      args{query: "a=1&b=&c=3&d=4", key: "b"},
 			wantValue: "",
 			wantQuery: "a=1&c=3&d=4",
+		},
+		{
+			name:      "Single param",
+			args:      args{query: "a=1", key: "a"},
+			wantValue: "1",
+			wantQuery: "",
+		},
+		{
+			name:      "Found with deprecated separator",
+			args:      args{query: "a=1;b=2;c=3", key: "b"},
+			wantValue: "2",
+			wantQuery: "a=1;c=3",
+		},
+		{
+			name:      "Found with mixed separators",
+			args:      args{query: "a=1;b=2&c=3&d=4", key: "b"},
+			wantValue: "2",
+			wantQuery: "a=1;c=3&d=4",
 		},
 	}
 	for _, tt := range tests {
