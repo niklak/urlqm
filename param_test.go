@@ -165,6 +165,12 @@ func TestGetParam(t *testing.T) {
 			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
 			wantValue: `"daily news"`,
 		},
+		{
+			name:      "bad encoding",
+			args:      args{query: `q=%-daily+news%22&theme=dark`, key: "q"},
+			wantValue: ``,
+			wantErr:   true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -211,6 +217,17 @@ func TestGetParamValues(t *testing.T) {
 			args:       args{query: "a=1;b=2;c=3;d=4;b=5;e=6", key: "b"},
 			wantValues: []string{"2", "5"},
 		},
+		{
+			name:       "encoded",
+			args:       args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantValues: []string{`"daily news"`},
+		},
+		{
+			name:       "bad encoding",
+			args:       args{query: `q=%-daily+news%22&theme=dark`, key: "q"},
+			wantValues: []string{},
+			wantErr:    true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -235,6 +252,7 @@ func TestPopParam(t *testing.T) {
 		name      string
 		args      args
 		wantValue string
+		wantErr   bool
 		wantQuery string
 	}{
 		{
@@ -273,10 +291,28 @@ func TestPopParam(t *testing.T) {
 			wantValue: "2",
 			wantQuery: "a=1;c=3&d=4",
 		},
+		{
+			name:      "encoded",
+			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantValue: `"daily news"`,
+			wantQuery: `theme=dark`,
+		},
+		{
+			name:      "bad encoding",
+			args:      args{query: `q=%-daily+news%22&theme=dark`, key: "q"},
+			wantValue: ``,
+			wantQuery: `q=%-daily+news%22&theme=dark`,
+			wantErr:   true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotValue := PopParam(&tt.args.query, tt.args.key); gotValue != tt.wantValue {
+			gotValue, err := PopParam(&tt.args.query, tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if gotValue != tt.wantValue {
 				t.Errorf("PopParam() = %v, want %v", gotValue, tt.wantValue)
 			}
 			if tt.args.query != tt.wantQuery {
@@ -285,3 +321,67 @@ func TestPopParam(t *testing.T) {
 		})
 	}
 }
+
+func TestPopParamValues(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantValues []string
+		wantErr    bool
+		wantQuery  string
+	}{
+		{
+			name:       "Not found",
+			args:       args{query: "a=1&b=2&c=3", key: "d"},
+			wantValues: []string{},
+			wantQuery:  "a=1&b=2&c=3",
+		},
+		{
+			name:       "Found",
+			args:       args{query: "a=1&b=2&c=3&d=4", key: "b"},
+			wantValues: []string{"2"},
+			wantQuery:  "a=1&c=3&d=4",
+		},
+		{
+			name:       "Found",
+			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6", key: "b"},
+			wantValues: []string{"2", "4", "6"},
+			wantQuery:  "a=1&c=3&d=4",
+		},
+		{
+			name:       "encoded",
+			args:       args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantValues: []string{`"daily news"`},
+			wantQuery:  `theme=dark`,
+		},
+		{
+			name:       "bad encoding",
+			args:       args{query: `q=%-daily+news%22&theme=dark`, key: "q"},
+			wantValues: []string{},
+			wantQuery:  `q=%-daily+news%22&theme=dark`,
+			wantErr:    true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotValues, err := PopParamValues(&tt.args.query, tt.args.key)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("PopParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(gotValues, tt.wantValues) {
+				t.Errorf("PopParamValues() = %v, want %v", gotValues, tt.wantValues)
+			}
+
+			if !reflect.DeepEqual(gotValues, tt.wantValues) {
+				t.Errorf("PopParamValues() = %v, want %v", gotValues, tt.wantValues)
+			}
+		})
+	}
+}
+
+// TODO: add tests cases with errors
