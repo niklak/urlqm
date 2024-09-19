@@ -1,6 +1,7 @@
 package urlp
 
 import (
+	"fmt"
 	"strings"
 )
 
@@ -25,4 +26,14 @@ func trimParamSeparator(s string) (string, string) {
 	}
 
 	return s, ""
+}
+
+func errorMerge(err error, err1 error) error {
+	if err == nil {
+		return err1
+	} else if err1 == nil {
+		return err
+	} else {
+		return fmt.Errorf("%w; %w", err, err1)
+	}
 }

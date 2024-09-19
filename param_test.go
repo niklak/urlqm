@@ -1,6 +1,8 @@
 package urlp
 
 import (
+	"errors"
+	"net/url"
 	"reflect"
 	"testing"
 )
@@ -26,6 +28,11 @@ func TestEncodeParams(t *testing.T) {
 			name: "Encoded chars",
 			args: args{[]QueryParam{{"q", `"daily news"`}}},
 			want: "q=%22daily+news%22",
+		},
+		{
+			name: "Previously bad encoded",
+			args: args{[]QueryParam{{"q", `100%+truth`}}},
+			want: "q=100%25%2Btruth",
 		},
 	}
 	for _, tt := range tests {
@@ -77,13 +84,22 @@ func TestParseParams(t *testing.T) {
 			wantValues: []QueryParam{{"q", `"daily news"`}},
 			wantErr:    false,
 		},
+		{
+			name:       "Encoded chars err",
+			args:       args{`a=1&q=100%+truth&b=2&brightness=90%`},
+			wantValues: []QueryParam{{"a", "1"}, {"q", "100%+truth"}, {"b", "2"}, {"brightness", "90%"}},
+			wantErr:    true,
+		},
 	}
 	for _, tt := range tests {
+		var e url.EscapeError
 		t.Run(tt.name, func(t *testing.T) {
 			gotValues, err := ParseParams(tt.args.query)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseParams() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			if tt.wantErr {
+				if !errors.As(err, &e) {
+					t.Errorf("ParseParams() error = %v, wantErr %v", err, tt.wantErr)
+					return
+				}
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
 				t.Errorf("ParseParams() = %v, want %v", gotValues, tt.wantValues)

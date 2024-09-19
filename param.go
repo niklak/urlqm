@@ -1,3 +1,4 @@
+// Package urlp implements an alternative approach to handle url query parameters.
 package urlp
 
 import (
@@ -29,33 +30,49 @@ func EncodeParams(params []QueryParam) string {
 }
 
 // ParseParams takes a query string and returns a slice of QueryParam.
-func ParseParams(query string) (values []QueryParam, err error) {
-
-	values = make([]QueryParam, 0)
+// Unlike `url.ParseQuery`, this function collects unescaped keys and values if it fails to unescape them.
+// Also it collects errors from `url.QueryUnescape`. It can be checked with [errors.As] or `err != nil`.
+// If error is not `nil`, it contains all occurred errors.
+//
+// ## Example:
+//
+//	params, err := urlp.ParseParams(`a=1&q=100%+truth&b=2&brightness=90%`)
+//	if err != nil {
+//	    fmt.Println("Error:", err)
+//	    // handling this error, keep in mind that params is not empty, it contains all keys and values, both escaped and unescaped
+//	}
+//	var e url.EscapeError
+//	if errors.As(err, &e) {
+//	    fmt.Printf("Error: %v\n", e)
+//	}
+//	fmt.Printf("%+v\n", params) // outputs: [{a 1} {q 100%+truth} {b 2} {brightness 90%}]
+func ParseParams(query string) ([]QueryParam, error) {
+	var err error
+	params := make([]QueryParam, 0)
 	for query != "" {
-		var key string
-		key, query = cutStringByAnySep(query, "&;")
+		var key, value string
+		key, query = cutStringByAnySep(query, separators)
 		if key == "" {
 			continue
 		}
-		key, value, _ := strings.Cut(key, "=")
-		key, err1 := url.QueryUnescape(key)
-		if err1 != nil {
-			if err == nil {
-				err = err1
-			}
-			continue
+		key, value, _ = strings.Cut(key, "=")
+
+		if key1, err1 := url.QueryUnescape(key); err1 == nil {
+			key = key1
+		} else {
+			err = errorMerge(err, err1)
 		}
-		value, err1 = url.QueryUnescape(value)
-		if err1 != nil {
-			if err == nil {
-				err = err1
-			}
-			continue
+
+		if value1, err1 := url.QueryUnescape(value); err1 == nil {
+			value = value1
+		} else {
+			err = errorMerge(err, err1)
 		}
-		values = append(values, QueryParam{Key: key, Value: value})
+
+		params = append(params, QueryParam{Key: key, Value: value})
 	}
-	return
+
+	return params, err
 }
 
 // SortOrderParams sorts the QueryParam slice based on the provided order members while omitted params are placed as it was.
@@ -172,3 +189,7 @@ func GetParamValues(query, key string) (values []string, err error) {
 
 	return
 }
+
+// TODO: probably add a container
+// TODO: readme
+// TODO: some benchmarks
