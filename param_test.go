@@ -399,3 +399,36 @@ func TestPopParamValues(t *testing.T) {
 		})
 	}
 }
+
+func TestSortParams(t *testing.T) {
+	type args struct {
+		params []QueryParam
+	}
+	tests := []struct {
+		name       string
+		args       args
+		wantParams []QueryParam
+	}{
+		{
+			name: "simple sort",
+			args: args{
+				params: []QueryParam{
+					{"b", "2"},
+					{"a", "2"},
+					{"a", "1"},
+					{"c", "3"},
+				},
+			},
+			wantParams: []QueryParam{{"a", "2"}, {"a", "1"}, {"b", "2"}, {"c", "3"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SortParams(tt.args.params)
+
+			if !reflect.DeepEqual(tt.args.params, tt.wantParams) {
+				t.Errorf("SortParams() = %v, want %v", tt.args.params, tt.wantParams)
+			}
+		})
+	}
+}

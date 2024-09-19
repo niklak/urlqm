@@ -3,6 +3,7 @@ package urlp
 
 import (
 	"net/url"
+	"sort"
 	"strings"
 )
 
@@ -27,6 +28,13 @@ func EncodeParams(params []QueryParam) string {
 		buf.WriteString(url.QueryEscape(param.Value))
 	}
 	return buf.String()
+}
+
+// SortParams sorts the slice of QueryParam by key in ascending order.
+func SortParams(params []QueryParam) {
+	sort.Slice(params, func(i, j int) bool {
+		return params[i].Key < params[j].Key
+	})
 }
 
 // ParseParams takes a query string and returns a slice of QueryParam.
@@ -194,3 +202,4 @@ func GetParamValues(query, key string) (values []string, err error) {
 // TODO: readme
 // TODO: some benchmarks
 // TODO: sort
+// TODO: add param
