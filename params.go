@@ -35,7 +35,7 @@ func EncodeParams(params []Param) string {
 // Also it collects errors from `url.QueryUnescape`. It can be checked with [errors.As] or `err != nil`.
 // If error is not `nil`, it contains all occurred errors.
 //
-// ## Example:
+// Example:
 //
 //	params, err := urlp.ParseParams(`a=1&q=100%+truth&b=2&brightness=90%`)
 //	if err != nil {
@@ -102,6 +102,5 @@ func SortParams(params []Param) {
 	})
 }
 
-// TODO: probably add a container
 // TODO: readme
 // TODO: some benchmarks
