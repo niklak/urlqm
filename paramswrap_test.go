@@ -100,3 +100,64 @@ func TestQueryParams(t *testing.T) {
 		})
 	}
 }
+
+func TestParams_Sort(t *testing.T) {
+	tests := []struct {
+		name  string
+		p     Params
+		wantP Params
+	}{
+		{
+			name:  "Simple",
+			p:     Params{{"b", "2"}, {"a", "2"}, {"a", "1"}, {"c", "3"}},
+			wantP: Params{{"a", "2"}, {"a", "1"}, {"b", "2"}, {"c", "3"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.Sort()
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.Sort() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_SetOrder(t *testing.T) {
+	type args struct {
+		order []string
+	}
+	tests := []struct {
+		name  string
+		p     Params
+		args  args
+		wantP Params
+	}{
+		{
+			name:  "No order",
+			args:  args{order: nil},
+			p:     []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+			wantP: []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+		},
+		{
+			name:  "With priority param",
+			args:  args{order: []string{"q"}},
+			p:     []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}},
+			wantP: []Param{{"q", "3"}, {"b", "2"}, {"a", "1"}},
+		},
+		{
+			name:  "With full order",
+			args:  args{order: []string{"q", "a", "b"}},
+			p:     []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}},
+			wantP: []Param{{"q", "3"}, {"a", "1"}, {"b", "2"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.SetOrder(tt.args.order...)
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.SetOrder() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
