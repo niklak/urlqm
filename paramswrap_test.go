@@ -161,3 +161,32 @@ func TestParams_SetOrder(t *testing.T) {
 		})
 	}
 }
+
+func TestParams_Add(t *testing.T) {
+	type args struct {
+		key   string
+		value string
+	}
+	tests := []struct {
+		name  string
+		p     Params
+		args  args
+		wantP Params
+	}{
+		// TODO: Add test cases.
+		{
+			name:  "Simple",
+			p:     []Param{{"k1", "v1"}, {"k2", "v2"}},
+			args:  args{"k3", "v3"},
+			wantP: []Param{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.Add(tt.args.key, tt.args.value)
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.Add() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}

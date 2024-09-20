@@ -18,7 +18,17 @@ func (p *Params) SetOrder(order ...string) {
 	SortOrderParams((*[]Param)(p), order...)
 }
 
+// Add adds a new param to the params slice.
+func (p *Params) Add(key, value string) {
+	*p = append(*p, Param{key, value})
+}
+
 // QueryParams takes a query string and returns a slice of [Param]. See [ParseParams].
 func QueryParams(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)
 }
+
+// TODO: add Get
+// TODO: add GetAll
+// TODO: add Pop
+// TODO: add PopAll
