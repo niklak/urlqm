@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// PopParam removes and returns the value of a parameter from the query string.
-func PopParam(query *string, key string) (value string, err error) {
+// PopQueryParam removes and returns the value of a parameter from the query string.
+func PopQueryParam(query *string, key string) (value string, err error) {
 	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
 	if after == "" {
@@ -34,8 +34,8 @@ func PopParam(query *string, key string) (value string, err error) {
 	return
 }
 
-// PopParamValues removes and returns a slice of values for a parameter from the query string.
-func PopParamValues(query *string, key string) (values []string, err error) {
+// PopQueryParamValues removes and returns a slice of values for a parameter from the query string.
+func PopQueryParamValues(query *string, key string) (values []string, err error) {
 	values = make([]string, 0)
 	var after string = *query
 
@@ -69,8 +69,8 @@ func PopParamValues(query *string, key string) (values []string, err error) {
 	return
 }
 
-// GetParam returns the value of a parameter from the query string.
-func GetParam(query string, key string) (value string, err error) {
+// GetQueryParam returns the value of a parameter from the query string.
+func GetQueryParam(query string, key string) (value string, err error) {
 	_, after, _ := strings.Cut(query, key+"=")
 	//if the given param wasn't found or it was without value
 	if after == "" {
@@ -82,8 +82,8 @@ func GetParam(query string, key string) (value string, err error) {
 	return
 }
 
-// GetParamValues returns the slice of values for a parameter from the query string.
-func GetParamValues(query, key string) (values []string, err error) {
+// GetQueryParamValues returns the slice of values for a parameter from the query string.
+func GetQueryParamValues(query, key string) (values []string, err error) {
 
 	values = make([]string, 0)
 	for query != "" {
@@ -99,4 +99,22 @@ func GetParamValues(query, key string) (values []string, err error) {
 	}
 
 	return
+}
+
+// AddQueryParam adds a parameter to the query string.
+func AddQueryParam(query *string, key string, value string) {
+
+	if key == "" {
+		return
+	}
+	buf := strings.Builder{}
+
+	if len(*query) > 0 {
+		buf.WriteString(*query)
+		buf.WriteByte('&')
+	}
+	buf.WriteString(url.QueryEscape(key))
+	buf.WriteByte('=')
+	buf.WriteString(url.QueryEscape(value))
+	*query = buf.String()
 }

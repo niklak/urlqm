@@ -9,29 +9,29 @@ import (
 
 func TestEncodeParams(t *testing.T) {
 	type args struct {
-		params []QueryParam
+		params []Param
 	}
 	tests := []struct {
 		name string
 		args args
 		want string
 	}{
-		{name: "No params", args: args{[]QueryParam{}}, want: ""},
+		{name: "No params", args: args{[]Param{}}, want: ""},
 		{name: "No params nil", args: args{nil}, want: ""},
-		{name: "Simple", args: args{[]QueryParam{{"a", "1"}}}, want: "a=1"},
+		{name: "Simple", args: args{[]Param{{"a", "1"}}}, want: "a=1"},
 		{
 			name: "Unordered multiple values",
-			args: args{[]QueryParam{{"a", "1"}, {"b", "2"}, {"a", "3"}}},
+			args: args{[]Param{{"a", "1"}, {"b", "2"}, {"a", "3"}}},
 			want: "a=1&b=2&a=3",
 		},
 		{
 			name: "Encoded chars",
-			args: args{[]QueryParam{{"q", `"daily news"`}}},
+			args: args{[]Param{{"q", `"daily news"`}}},
 			want: "q=%22daily+news%22",
 		},
 		{
 			name: "Previously bad encoded",
-			args: args{[]QueryParam{{"q", `100%+truth`}}},
+			args: args{[]Param{{"q", `100%+truth`}}},
 			want: "q=100%25%2Btruth",
 		},
 	}
@@ -51,43 +51,43 @@ func TestParseParams(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		wantValues []QueryParam
+		wantValues []Param
 		wantErr    bool
 	}{
 		{
 			name:       "Empty",
 			args:       args{},
-			wantValues: []QueryParam{},
+			wantValues: []Param{},
 			wantErr:    false,
 		},
 		{
 			name:       "Ampersand as separator",
 			args:       args{"k1=v1&k2=v2"},
-			wantValues: []QueryParam{{"k1", "v1"}, {"k2", "v2"}},
+			wantValues: []Param{{"k1", "v1"}, {"k2", "v2"}},
 			wantErr:    false,
 		},
 		{
 			name:       "Semicolon as separator",
 			args:       args{"k1=v1;k2=v2"},
-			wantValues: []QueryParam{{"k1", "v1"}, {"k2", "v2"}},
+			wantValues: []Param{{"k1", "v1"}, {"k2", "v2"}},
 			wantErr:    false,
 		},
 		{
 			name:       "Mixed separators",
 			args:       args{"k1=v1;k2=v2&k3=v3"},
-			wantValues: []QueryParam{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			wantValues: []Param{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
 			wantErr:    false,
 		},
 		{
 			name:       "Encoded chars",
 			args:       args{`q=%22daily+news%22`},
-			wantValues: []QueryParam{{"q", `"daily news"`}},
+			wantValues: []Param{{"q", `"daily news"`}},
 			wantErr:    false,
 		},
 		{
 			name:       "Encoded chars err",
 			args:       args{`a=1&q=100%+truth&b=2&brightness=90%`},
-			wantValues: []QueryParam{{"a", "1"}, {"q", "100%+truth"}, {"b", "2"}, {"brightness", "90%"}},
+			wantValues: []Param{{"a", "1"}, {"q", "100%+truth"}, {"b", "2"}, {"brightness", "90%"}},
 			wantErr:    true,
 		},
 	}
@@ -110,28 +110,28 @@ func TestParseParams(t *testing.T) {
 
 func TestSortOrderParams(t *testing.T) {
 	type args struct {
-		params []QueryParam
+		params []Param
 		order  []string
 	}
 	tests := []struct {
 		name       string
 		args       args
-		wantValues []QueryParam
+		wantValues []Param
 	}{
 		{
 			name:       "No order",
-			args:       args{params: []QueryParam{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}}, order: nil},
-			wantValues: []QueryParam{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+			args:       args{params: []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}}, order: nil},
+			wantValues: []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
 		},
 		{
 			name:       "With priority param",
-			args:       args{params: []QueryParam{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q"}},
-			wantValues: []QueryParam{{"q", "3"}, {"b", "2"}, {"a", "1"}},
+			args:       args{params: []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q"}},
+			wantValues: []Param{{"q", "3"}, {"b", "2"}, {"a", "1"}},
 		},
 		{
 			name:       "With full order",
-			args:       args{params: []QueryParam{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q", "a", "b"}},
-			wantValues: []QueryParam{{"q", "3"}, {"a", "1"}, {"b", "2"}},
+			args:       args{params: []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}}, order: []string{"q", "a", "b"}},
+			wantValues: []Param{{"q", "3"}, {"a", "1"}, {"b", "2"}},
 		},
 	}
 	for _, tt := range tests {
@@ -147,24 +147,24 @@ func TestSortOrderParams(t *testing.T) {
 
 func TestSortParams(t *testing.T) {
 	type args struct {
-		params []QueryParam
+		params []Param
 	}
 	tests := []struct {
 		name       string
 		args       args
-		wantParams []QueryParam
+		wantParams []Param
 	}{
 		{
 			name: "simple sort",
 			args: args{
-				params: []QueryParam{
+				params: []Param{
 					{"b", "2"},
 					{"a", "2"},
 					{"a", "1"},
 					{"c", "3"},
 				},
 			},
-			wantParams: []QueryParam{{"a", "2"}, {"a", "1"}, {"b", "2"}, {"c", "3"}},
+			wantParams: []Param{{"a", "2"}, {"a", "1"}, {"b", "2"}, {"c", "3"}},
 		},
 	}
 	for _, tt := range tests {

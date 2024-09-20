@@ -43,9 +43,9 @@ func main() {
 	// At this point we have and url with RawQuery and instead of parsing the whole query string,
 	// we can parse just a small peace of string and take the value.
 
-	q, err = urlp.GetParam(u.RawQuery, "q")
+	q, err = urlp.GetQueryParam(u.RawQuery, "q")
 	//OR if we deal with encoded keys:
-	//q, err = urlp.GetParam(u.RawQuery, url.QueryEscape(`%22q%22`))
+	//q, err = urlp.GetQueryParam(u.RawQuery, url.QueryEscape(`%22q%22`))
 
 	if err != nil {
 		panic(err)

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetParam(t *testing.T) {
+func TestGetQueryParam(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -50,19 +50,19 @@ func TestGetParam(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValue, err := GetParam(tt.args.query, tt.args.key)
+			gotValue, err := GetQueryParam(tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseParams() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValue, tt.wantValue) {
-				t.Errorf("GetParam() = %v, want %v", gotValue, tt.wantValue)
+				t.Errorf("GetQueryParam() = %v, want %v", gotValue, tt.wantValue)
 			}
 		})
 	}
 }
 
-func TestGetParamValues(t *testing.T) {
+func TestGetQueryParamValues(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -107,19 +107,19 @@ func TestGetParamValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := GetParamValues(tt.args.query, tt.args.key)
+			gotValues, err := GetQueryParamValues(tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("GetParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("GetQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
 			}
 		})
 	}
 }
 
-func TestPopParam(t *testing.T) {
+func TestPopQueryParam(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -183,22 +183,22 @@ func TestPopParam(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValue, err := PopParam(&tt.args.query, tt.args.key)
+			gotValue, err := PopQueryParam(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotValue != tt.wantValue {
-				t.Errorf("PopParam() = %v, want %v", gotValue, tt.wantValue)
+				t.Errorf("PopQueryParam() = %v, want %v", gotValue, tt.wantValue)
 			}
 			if tt.args.query != tt.wantQuery {
-				t.Errorf("PopParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+				t.Errorf("PopQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
 }
 
-func TestPopParamValues(t *testing.T) {
+func TestPopQueryParamValues(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -244,17 +244,60 @@ func TestPopParamValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := PopParamValues(&tt.args.query, tt.args.key)
+			gotValues, err := PopQueryParamValues(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PopParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("PopQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("PopParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("PopQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
 			}
 
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("PopParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("PopQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+			}
+		})
+	}
+}
+
+func TestAddQueryParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+		value string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantQuery string
+	}{
+		{
+			name:      "Empty query no key no value",
+			args:      args{},
+			wantQuery: "",
+		},
+		{
+			name:      "Empty query no value",
+			args:      args{query: "", key: "a"},
+			wantQuery: "a=",
+		},
+		{
+			name:      "Simple addition",
+			args:      args{query: "a=1&b=2", key: "c", value: "3"},
+			wantQuery: "a=1&b=2&c=3",
+		},
+		{
+			name:      "Encode key and value",
+			args:      args{query: "a=1=b=2", key: "слово", value: "опис"},
+			wantQuery: "a=1=b=2&%D1%81%D0%BB%D0%BE%D0%B2%D0%BE=%D0%BE%D0%BF%D0%B8%D1%81",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			AddQueryParam(&tt.args.query, tt.args.key, tt.args.value)
+
+			if tt.args.query != tt.wantQuery {
+				t.Errorf("TestAddQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
