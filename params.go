@@ -105,3 +105,4 @@ func SortParams(params []Param) {
 // TODO: readme
 // TODO: some benchmarks
 // TODO: examples
+// TODO: optimize functions, after benchmarking
