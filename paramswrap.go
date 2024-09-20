@@ -23,6 +23,27 @@ func (p *Params) Add(key, value string) {
 	*p = append(*p, Param{key, value})
 }
 
+// Get returns the value of a param with given key or an empty string if not found.
+func (p *Params) Get(key string) string {
+	for _, param := range *p {
+		if param.Key == key {
+			return param.Value
+		}
+	}
+	return ""
+}
+
+// GetAll returns all values for the given key, if not found returns nil.
+func (p *Params) GetAll(key string) []string {
+	var values []string
+	for _, param := range *p {
+		if param.Key == key {
+			values = append(values, param.Value)
+		}
+	}
+	return values
+}
+
 // QueryParams takes a query string and returns a slice of [Param]. See [ParseParams].
 func QueryParams(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)
