@@ -49,7 +49,5 @@ func QueryParams(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)
 }
 
-// TODO: add Get
-// TODO: add GetAll
 // TODO: add Pop
 // TODO: add PopAll

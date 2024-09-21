@@ -136,20 +136,20 @@ func TestParams_SetOrder(t *testing.T) {
 		{
 			name:  "No order",
 			args:  args{order: nil},
-			p:     []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
-			wantP: []Param{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+			p:     Params{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
+			wantP: Params{{"k3", "v3"}, {"k2", "v2"}, {"k1", "v1"}},
 		},
 		{
 			name:  "With priority param",
 			args:  args{order: []string{"q"}},
-			p:     []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}},
-			wantP: []Param{{"q", "3"}, {"b", "2"}, {"a", "1"}},
+			p:     Params{{"b", "2"}, {"a", "1"}, {"q", "3"}},
+			wantP: Params{{"q", "3"}, {"b", "2"}, {"a", "1"}},
 		},
 		{
 			name:  "With full order",
 			args:  args{order: []string{"q", "a", "b"}},
-			p:     []Param{{"b", "2"}, {"a", "1"}, {"q", "3"}},
-			wantP: []Param{{"q", "3"}, {"a", "1"}, {"b", "2"}},
+			p:     Params{{"b", "2"}, {"a", "1"}, {"q", "3"}},
+			wantP: Params{{"q", "3"}, {"a", "1"}, {"b", "2"}},
 		},
 	}
 	for _, tt := range tests {
@@ -173,12 +173,11 @@ func TestParams_Add(t *testing.T) {
 		args  args
 		wantP Params
 	}{
-		// TODO: Add test cases.
 		{
 			name:  "Simple",
-			p:     []Param{{"k1", "v1"}, {"k2", "v2"}},
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
 			args:  args{"k3", "v3"},
-			wantP: []Param{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			wantP: Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
 		},
 	}
 	for _, tt := range tests {
@@ -186,6 +185,70 @@ func TestParams_Add(t *testing.T) {
 			tt.p.Add(tt.args.key, tt.args.value)
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
 				t.Errorf("Params.Add() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_Get(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name string
+		p    Params
+		args args
+		want string
+	}{
+		{
+			name: "Not found",
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}},
+			args: args{"k3"},
+			want: "",
+		},
+		{
+			name: "Found",
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}},
+			args: args{"k2"},
+			want: "v2",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.p.Get(tt.args.key); got != tt.want {
+				t.Errorf("Params.Get() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestParams_GetAll(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name string
+		p    Params
+		args args
+		want []string
+	}{
+		{
+			name: "Not found",
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}},
+			args: args{"k3"},
+			want: nil,
+		},
+		{
+			name: "Found",
+			args: args{"k2"},
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}, {"k2", "v3"}},
+			want: []string{"v2", "v3"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.p.GetAll(tt.args.key); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Params.GetAll() = %v, want %v", got, tt.want)
 			}
 		})
 	}
