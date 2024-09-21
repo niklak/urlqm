@@ -34,8 +34,8 @@ func RemoveQueryParam(query *string, key string) (value string, err error) {
 	return
 }
 
-// RemoveQueryParamValues removes and returns a slice of values for a parameter from the query string.
-func RemoveQueryParamValues(query *string, key string) (values []string, err error) {
+// RemoveQueryParamAll removes and returns a slice of values for a parameter from the query string.
+func RemoveQueryParamAll(query *string, key string) (values []string, err error) {
 	var after string = *query
 
 	buf := strings.Builder{}
@@ -81,8 +81,8 @@ func GetQueryParam(query string, key string) (value string, err error) {
 	return
 }
 
-// GetQueryParamValues returns the slice of values for a parameter from the query string.
-func GetQueryParamValues(query, key string) (values []string, err error) {
+// GetQueryParamAll returns the slice of values for a parameter from the query string.
+func GetQueryParamAll(query, key string) (values []string, err error) {
 
 	for query != "" {
 		_, query, _ = strings.Cut(query, key+"=")

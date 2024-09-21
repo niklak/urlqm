@@ -62,7 +62,7 @@ func TestGetQueryParam(t *testing.T) {
 	}
 }
 
-func TestGetQueryParamValues(t *testing.T) {
+func TestGetQueryParamAll(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -107,13 +107,13 @@ func TestGetQueryParamValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := GetQueryParamValues(tt.args.query, tt.args.key)
+			gotValues, err := GetQueryParamAll(tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("GetQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("GetQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 		})
 	}
@@ -185,7 +185,7 @@ func TestRemoveQueryParam(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotValue, err := RemoveQueryParam(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotValue != tt.wantValue {
@@ -198,7 +198,7 @@ func TestRemoveQueryParam(t *testing.T) {
 	}
 }
 
-func TestRemoveQueryParamValues(t *testing.T) {
+func TestRemoveQueryParamAll(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -244,17 +244,17 @@ func TestRemoveQueryParamValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := RemoveQueryParamValues(&tt.args.query, tt.args.key)
+			gotValues, err := RemoveQueryParamAll(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("RemoveQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("RemoveQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("RemoveQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("RemoveQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("RemoveQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("RemoveQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 		})
 	}
