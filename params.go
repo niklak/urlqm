@@ -49,7 +49,13 @@ func EncodeParams(params []Param) string {
 //	fmt.Printf("%+v\n", params) // outputs: [{a 1} {q 100%+truth} {b 2} {brightness 90%}]
 func ParseParams(query string) ([]Param, error) {
 	var err error
-	var params []Param
+
+	if query == "" {
+		return nil, err
+	}
+
+	estLen := strings.Count(query, "&") + strings.Count(query, ";") + 1
+	params := make([]Param, 0, estLen)
 	for query != "" {
 		var key, value string
 		key, query = cutStringByAnySep(query, separators)
@@ -57,13 +63,14 @@ func ParseParams(query string) ([]Param, error) {
 			continue
 		}
 		key, value, _ = strings.Cut(key, "=")
-
+		// TODO: alloc!
 		if key1, err1 := url.QueryUnescape(key); err1 == nil {
 			key = key1
 		} else {
 			err = errorMerge(err, err1)
 		}
 
+		// TODO: alloc!
 		if value1, err1 := url.QueryUnescape(value); err1 == nil {
 			value = value1
 		} else {
