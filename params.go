@@ -14,7 +14,8 @@ type Param struct {
 
 // EncodeParams takes a slice of Param and returns the encoded query string.
 func EncodeParams(params []Param) string {
-	if params == nil {
+
+	if len(params) == 0 {
 		return ""
 	}
 	var buf strings.Builder

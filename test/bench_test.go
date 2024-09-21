@@ -97,3 +97,26 @@ func BenchmarkParseParamsUrlP(b *testing.B) {
 		urlp.ParseParams(query)
 	}
 }
+
+func BenchmarkEncodeParamsStd(b *testing.B) {
+	// std query parse and encode breaks original query param order
+	q, _ := url.ParseQuery(simpleRawQuery)
+	for i := 0; i < b.N; i++ {
+		_ = q.Encode()
+	}
+}
+
+func BenchmarkEncodeParamsUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	for i := 0; i < b.N; i++ {
+		_ = q.Encode()
+	}
+}
+
+func BenchmarkEncodeParamsSortedUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	for i := 0; i < b.N; i++ {
+		q.Sort()
+		_ = q.Encode()
+	}
+}
