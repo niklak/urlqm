@@ -49,7 +49,7 @@ func EncodeParams(params []Param) string {
 //	fmt.Printf("%+v\n", params) // outputs: [{a 1} {q 100%+truth} {b 2} {brightness 90%}]
 func ParseParams(query string) ([]Param, error) {
 	var err error
-	params := make([]Param, 0)
+	var params []Param
 	for query != "" {
 		var key, value string
 		key, query = cutStringByAnySep(query, separators)

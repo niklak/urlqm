@@ -76,7 +76,7 @@ func TestGetQueryParamValues(t *testing.T) {
 		{
 			name:       "Not found",
 			args:       args{query: "a=1&b=2&c=3", key: "d"},
-			wantValues: []string{},
+			wantValues: nil,
 		},
 		{
 			name:       "Found empty",
@@ -213,7 +213,7 @@ func TestPopQueryParamValues(t *testing.T) {
 		{
 			name:       "Not found",
 			args:       args{query: "a=1&b=2&c=3", key: "d"},
-			wantValues: []string{},
+			wantValues: nil,
 			wantQuery:  "a=1&b=2&c=3",
 		},
 		{

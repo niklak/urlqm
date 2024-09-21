@@ -53,7 +53,7 @@ func TestQueryParams(t *testing.T) {
 		{
 			name:    "Empty",
 			args:    args{},
-			wantP:   Params{},
+			wantP:   nil,
 			wantErr: false,
 		},
 		{

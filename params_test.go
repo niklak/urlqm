@@ -57,7 +57,7 @@ func TestParseParams(t *testing.T) {
 		{
 			name:       "Empty",
 			args:       args{},
-			wantValues: []Param{},
+			wantValues: nil,
 			wantErr:    false,
 		},
 		{

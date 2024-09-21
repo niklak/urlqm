@@ -36,7 +36,6 @@ func PopQueryParam(query *string, key string) (value string, err error) {
 
 // PopQueryParamValues removes and returns a slice of values for a parameter from the query string.
 func PopQueryParamValues(query *string, key string) (values []string, err error) {
-	values = make([]string, 0)
 	var after string = *query
 
 	buf := strings.Builder{}
@@ -85,7 +84,6 @@ func GetQueryParam(query string, key string) (value string, err error) {
 // GetQueryParamValues returns the slice of values for a parameter from the query string.
 func GetQueryParamValues(query, key string) (values []string, err error) {
 
-	values = make([]string, 0)
 	for query != "" {
 		_, query, _ = strings.Cut(query, key+"=")
 		if query == "" {
