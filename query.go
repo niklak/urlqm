@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// PopQueryParam removes and returns the value of a parameter from the query string.
-func PopQueryParam(query *string, key string) (value string, err error) {
+// RemoveQueryParam removes and returns the value of a parameter from the query string.
+func RemoveQueryParam(query *string, key string) (value string, err error) {
 	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
 	if after == "" {
@@ -34,8 +34,8 @@ func PopQueryParam(query *string, key string) (value string, err error) {
 	return
 }
 
-// PopQueryParamValues removes and returns a slice of values for a parameter from the query string.
-func PopQueryParamValues(query *string, key string) (values []string, err error) {
+// RemoveQueryParamValues removes and returns a slice of values for a parameter from the query string.
+func RemoveQueryParamValues(query *string, key string) (values []string, err error) {
 	var after string = *query
 
 	buf := strings.Builder{}

@@ -119,7 +119,7 @@ func TestGetQueryParamValues(t *testing.T) {
 	}
 }
 
-func TestPopQueryParam(t *testing.T) {
+func TestRemoveQueryParam(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -183,22 +183,22 @@ func TestPopQueryParam(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValue, err := PopQueryParam(&tt.args.query, tt.args.key)
+			gotValue, err := RemoveQueryParam(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotValue != tt.wantValue {
-				t.Errorf("PopQueryParam() = %v, want %v", gotValue, tt.wantValue)
+				t.Errorf("RemoveQueryParam() = %v, want %v", gotValue, tt.wantValue)
 			}
 			if tt.args.query != tt.wantQuery {
-				t.Errorf("PopQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+				t.Errorf("RemoveQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
 }
 
-func TestPopQueryParamValues(t *testing.T) {
+func TestRemoveQueryParamValues(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -244,17 +244,17 @@ func TestPopQueryParamValues(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := PopQueryParamValues(&tt.args.query, tt.args.key)
+			gotValues, err := RemoveQueryParamValues(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PopQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("RemoveQueryParamValues() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("PopQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("RemoveQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
 			}
 
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("PopQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("RemoveQueryParamValues() = %v, want %v", gotValues, tt.wantValues)
 			}
 		})
 	}

@@ -250,6 +250,85 @@ func TestParams_GetAll(t *testing.T) {
 			if got := tt.p.GetAll(tt.args.key); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Params.GetAll() = %v, want %v", got, tt.want)
 			}
+
+		})
+	}
+}
+
+func TestParams_Remove(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name      string
+		p         Params
+		args      args
+		wantP     Params
+		wantValue string
+	}{
+		{
+			name:      "Not found",
+			p:         Params{{"k1", "v1"}, {"k2", "v2"}},
+			args:      args{"k3"},
+			wantP:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			wantValue: "",
+		},
+		{
+			name:      "Found",
+			p:         Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			args:      args{"k2"},
+			wantP:     Params{{"k1", "v1"}, {"k3", "v3"}},
+			wantValue: "v2",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotValue := tt.p.Remove(tt.args.key); gotValue != tt.wantValue {
+				t.Errorf("Params.Remove() = %v, want %v", gotValue, tt.wantValue)
+			}
+
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.Add() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_RemoveAll(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name       string
+		p          Params
+		args       args
+		wantP      Params
+		wantValues []string
+	}{
+		{
+			name:       "Not found",
+			p:          Params{{"k1", "v1"}, {"k2", "v2"}},
+			args:       args{"k3"},
+			wantP:      Params{{"k1", "v1"}, {"k2", "v2"}},
+			wantValues: nil,
+		},
+		{
+			name:       "Found",
+			p:          Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}, {"k2", "v4"}},
+			args:       args{"k2"},
+			wantP:      Params{{"k1", "v1"}, {"k3", "v3"}},
+			wantValues: []string{"v2", "v4"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if gotValues := tt.p.RemoveAll(tt.args.key); !reflect.DeepEqual(gotValues, tt.wantValues) {
+				t.Errorf("Params.RemoveAll() = %v, want %v", gotValues, tt.wantValues)
+			}
+
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.RemoveAll() = %v, want %v", tt.p, tt.wantP)
+			}
 		})
 	}
 }
