@@ -35,19 +35,6 @@ func EncodeParams(params []Param) string {
 // Unlike `url.ParseQuery`, this function collects unescaped keys and values if it fails to unescape them.
 // Also it collects errors from `url.QueryUnescape`. It can be checked with [errors.As] or `err != nil`.
 // If error is not `nil`, it contains all occurred errors.
-//
-// Example:
-//
-//	params, err := urlp.ParseParams(`a=1&q=100%+truth&b=2&brightness=90%`)
-//	if err != nil {
-//	    fmt.Println("Error:", err)
-//	    // handling this error, keep in mind that params is not empty, it contains all keys and values, both escaped and unescaped
-//	}
-//	var e url.EscapeError
-//	if errors.As(err, &e) {
-//	    fmt.Printf("Error: %v\n", e)
-//	}
-//	fmt.Printf("%+v\n", params) // outputs: [{a 1} {q 100%+truth} {b 2} {brightness 90%}]
 func ParseParams(query string) ([]Param, error) {
 	var err error
 

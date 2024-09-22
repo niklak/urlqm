@@ -120,3 +120,72 @@ func BenchmarkEncodeParamsSortedUrlP(b *testing.B) {
 		_ = q.Encode()
 	}
 }
+
+func BenchmarkAddParam(b *testing.B) {
+	var query string
+	for i := 0; i < b.N; i++ {
+		query = simpleRawQuery
+		urlp.AddQueryParam(&query, "key6", "value1")
+	}
+}
+
+func BenchmarkAddParamUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	var query urlp.Params
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.Add("key6", "value1")
+	}
+}
+
+func BenchmarkAddParamStd(b *testing.B) {
+	q, _ := url.ParseQuery(simpleRawQuery)
+	var query url.Values
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.Add("key6", "value1")
+	}
+}
+
+func BenchmarkRemoveParamAll(b *testing.B) {
+	var query string
+	for i := 0; i < b.N; i++ {
+		query = simpleRawQuery
+		urlp.RemoveQueryParamAll(&query, "key1")
+	}
+}
+
+func BenchmarkRemoveParamAllUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	var query urlp.Params
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.RemoveAll("key1")
+	}
+}
+
+func BenchmarkRemoveParamAllStd(b *testing.B) {
+	q, _ := url.ParseQuery(simpleRawQuery)
+	var query url.Values
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.Del("key1")
+	}
+}
+
+func BenchmarkRemoveParam(b *testing.B) {
+	var query string
+	for i := 0; i < b.N; i++ {
+		query = simpleRawQuery
+		urlp.RemoveQueryParam(&query, "key1")
+	}
+}
+
+func BenchmarkRemoveParamUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	var query urlp.Params
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.Remove("key1")
+	}
+}
