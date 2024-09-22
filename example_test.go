@@ -19,3 +19,16 @@ func ExampleParseParams() {
 	}
 	fmt.Printf("%v\n", params)
 }
+
+func ExampleSortOrderParams() {
+	query := "q=100+truth&c=3&b=2&page=1&a=1"
+	params, err := ParseParams(query)
+	if err != nil {
+		panic(err)
+	}
+	SortOrderParams(&params, "a", "page", "q")
+
+	fmt.Println("Query:", EncodeParams(params))
+	// Output: Query: a=1&page=1&q=100+truth&c=3&b=2
+
+}

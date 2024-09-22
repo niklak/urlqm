@@ -332,3 +332,50 @@ func TestParams_RemoveAll(t *testing.T) {
 		})
 	}
 }
+
+func TestParams_Set(t *testing.T) {
+	type args struct {
+		key   string
+		value string
+	}
+	tests := []struct {
+		name  string
+		p     Params
+		wantP Params
+		args  args
+	}{
+		{
+			name:  "new param",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			wantP: Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			args:  args{"k3", "v3"},
+		},
+		{
+			name:  "replace existing",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			wantP: Params{{"k1", "v1"}, {"k2", "v3"}},
+			args:  args{"k2", "v3"},
+		},
+		{
+			name:  "replace existing multiple values",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}, {"k2", "v3"}, {"k3", "v3"}, {"k2", "v4"}},
+			wantP: Params{{"k1", "v1"}, {"k2", "v4"}, {"k3", "v3"}},
+			args:  args{"k2", "v4"},
+		},
+		{
+			name:  "empty key",
+			args:  args{"", "value"},
+			p:     Params{{"k1", "v1"}},
+			wantP: Params{{"k1", "v1"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.Set(tt.args.key, tt.args.value)
+
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.Set() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}

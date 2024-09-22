@@ -54,7 +54,7 @@ func RemoveQueryParamAll(query *string, key string) (values []string, err error)
 		value, after = cutStringByAnySep(after, separators)
 		value, err = url.QueryUnescape(value)
 		if err != nil {
-			return []string{}, err
+			return nil, err
 		}
 		values = append(values, value)
 		if buf.Len() > 0 && after != "" {
@@ -116,3 +116,5 @@ func AddQueryParam(query *string, key string, value string) {
 	buf.WriteString(url.QueryEscape(value))
 	*query = buf.String()
 }
+
+//TODO: SetQueryParam

@@ -67,6 +67,34 @@ func (p *Params) RemoveAll(key string) (values []string) {
 	return values
 }
 
+// Set sets a param with given key and value.
+// It replaces any existing param with the same key.
+func (p *Params) Set(key, value string) {
+	if len(key) == 0 {
+		return
+	}
+
+	foundIdx := -1
+	for i := 0; i < len(*p); i++ {
+		if (*p)[i].Key == key {
+			if foundIdx == -1 {
+				// remember the first index we found.
+				foundIdx = i
+				continue
+			}
+			// in other case simply remove the param.
+			*p = append((*p)[:i], (*p)[i+1:]...)
+		}
+	}
+
+	if foundIdx > -1 {
+		(*p)[foundIdx] = Param{Key: key, Value: value}
+		return
+	}
+	*p = append(*p, Param{Key: key, Value: value})
+
+}
+
 // QueryParams takes a query string and returns a slice of [Param]. See [ParseParams].
 func QueryParams(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)

@@ -25,6 +25,10 @@ BenchmarkParseParamsUrlP-16     11921043               502.9 ns/op           224
 ```
 
 ### Get a single parameter value
+> **Situation**: you just need to extract a single parameter's value from the query string.
+> Using standard library you forced to parse the whole query string, and then extract a single parameter value from it.
+Keep in mind that almost all parameters have more than one value. 
+So there is no need to decode every parameter to get a certain parameter value.
 
 ```bash
 go test -test.bench BenchmarkGetQueryParamOne -run=^Bench -benchmem -benchtime 5s ./test
