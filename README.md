@@ -3,8 +3,7 @@ A small Go package for manipulating URL query parameters
 
 ## Benchmark
 
-
-
+go version: go1.23.1 linux/amd64
 
 ```
 goos: linux
@@ -24,7 +23,7 @@ BenchmarkParseParamsStd-16               10128763    588.4 ns/op    160 B/op    
 BenchmarkParseParamsUrlP-16              11921043    502.9 ns/op    224 B/op    4 allocs/op
 ```
 
-### Get a single parameter value
+### Parse and get a last parameter's value
 > **Situation**: you just need to extract a single parameter's value from the query string.
 > Using standard library you forced to parse the whole query string, and then extract a single parameter value from it.
 Keep in mind that almost all parameters have more than one value. 
@@ -35,12 +34,12 @@ go test -test.bench BenchmarkGetQueryParamOne -run=^Bench -benchmem -benchtime 5
 ```
 
 ```
-BenchmarkGetQueryParamOne-16             39516896    145.7 ns/op     32 B/op    1 allocs/op
-BenchmarkGetQueryParamOneUrlP-16         11472595    515.3 ns/op    224 B/op    4 allocs/op
-BenchmarkGetQueryParamOneStd-16           9955138    602.1 ns/op    160 B/op    8 allocs/op
+BenchmarkGetQueryParamOne-16            46164402    113.5 ns/op      0 B/op    0 allocs/op
+BenchmarkGetQueryParamOneUrlP-16        11913193    504.3 ns/op    224 B/op    4 allocs/op
+BenchmarkGetQueryParamOneStd-16          9755433    611.5 ns/op    160 B/op    8 allocs/op
 ```
 
-### Get all parameters values
+### Parse and get all parameters values
 
 ```bash
 go test -test.bench BenchmarkGetQueryParamAll -run=^Bench -benchmem -benchtime 5s ./test
@@ -124,15 +123,30 @@ BenchmarkSetParamExistingUrlP-16        351103875    17.36 ns/op      0 B/op    
 BenchmarkSetParamExistingStd-16         218821728    27.38 ns/op     16 B/op    1 allocs/op
 ```
 
-### Parse query params and then set a new param
+### Parse query and then set a new param
 
 ```bash
 go test -test.bench BenchmarkParseSetParam -run=^Bench -benchmem -benchtime 5s ./test
 ```
+> Note: Added BenchmarkSetParam-16, which doesn't need to be parsed to set a param
 
 ```
+BenchmarkSetParam-16                     25434712    238.9 ns/op    400 B/op     3 allocs/op
 BenchmarkParseSetParamUrlP-16            10121535    598.9 ns/op    544 B/op     5 allocs/op
 BenchmarkParseSetParamStd-16              7931796    754.8 ns/op    576 B/op    11 allocs/op
 BenchmarkParseSetParamExistingUrlP-16    11554497    513.6 ns/op    224 B/op     4 allocs/op
 BenchmarkParseSetParamExistingStd-16      8157975    734.3 ns/op    576 B/op    11 allocs/op
+```
+
+### Parse query and then check if the last param exists
+
+
+```bash
+go test -test.bench BenchmarkHasQueryParam -run=^Bench -benchmem -benchtime 5s ./test
+```
+
+```
+BenchmarkHasQueryParam-16                148260583    39.26 ns/op      0 B/op    0 allocs/op
+BenchmarkHasQueryParamUrlP-16             12153108    498.6 ns/op    224 B/op    4 allocs/op
+BenchmarkHasQueryParamStd-16               9885644    615.9 ns/op    160 B/op    8 allocs/op
 ```

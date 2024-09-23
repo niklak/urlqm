@@ -45,21 +45,21 @@ func getParamUrlPAll(query string, key string) ([]string, error) {
 func BenchmarkGetQueryParamOne(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
-		urlp.GetQueryParam(query, "key3")
+		urlp.GetQueryParam(query, "uuid")
 	}
 }
 
 func BenchmarkGetQueryParamOneUrlP(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
-		getParamUrlP(query, "key3")
+		getParamUrlP(query, "uuid")
 	}
 }
 
 func BenchmarkGetQueryParamOneStd(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
-		getParamStd(query, "key3")
+		getParamStd(query, "uuid")
 	}
 }
 
@@ -305,5 +305,28 @@ func BenchmarkParseSetParamExistingStd(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		query, _ = url.ParseQuery(simpleRawQuery)
 		query.Set("key1", "new+value")
+	}
+}
+
+func BenchmarkHasQueryParam(b *testing.B) {
+	query := simpleRawQuery
+	for i := 0; i < b.N; i++ {
+		urlp.HasQueryParam(query, "uuid")
+	}
+}
+
+func BenchmarkHasQueryParamUrlP(b *testing.B) {
+	query := simpleRawQuery
+	for i := 0; i < b.N; i++ {
+		q, _ := urlp.QueryParams(query)
+		q.Has("uuid")
+	}
+}
+
+func BenchmarkHasQueryParamStd(b *testing.B) {
+	query := simpleRawQuery
+	for i := 0; i < b.N; i++ {
+		q, _ := url.ParseQuery(query)
+		q.Has("uuid")
 	}
 }

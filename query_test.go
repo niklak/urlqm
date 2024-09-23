@@ -47,6 +47,15 @@ func TestGetQueryParam(t *testing.T) {
 			wantValue: ``,
 			wantErr:   true,
 		},
+		{
+			name: "long query",
+			args: args{
+				query: `key1=value&key2=a+long+value&key3=a+little+bit+longer+value&key1=the+other+value+&uuid=aa83de98-5b1c-40af-8607-390f7b9271c1`,
+				key:   "uuid",
+			},
+			wantValue: "aa83de98-5b1c-40af-8607-390f7b9271c1",
+			wantErr:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
