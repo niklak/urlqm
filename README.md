@@ -94,3 +94,32 @@ BenchmarkRemoveParamAllStd-16           706041596    8.505 ns/op      0 B/op    
 BenchmarkRemoveParam-16                  75311437    77.57 ns/op    112 B/op    1 allocs/op
 BenchmarkRemoveParamUrlP-16             436867491    13.74 ns/op      0 B/op    0 allocs/op
 ```
+
+
+### Set a parameter
+
+```bash
+go test -test.bench BenchmarkSetParam -run=^Bench -benchmem -benchtime 5s ./test
+```
+
+```
+BenchmarkSetParam-16                     25434712    238.9 ns/op    400 B/op    3 allocs/op
+BenchmarkSetParamUrlP-16                 72594936    79.54 ns/op    320 B/op    1 allocs/op
+BenchmarkSetParamStd-16                 202840244    29.68 ns/op     16 B/op    1 allocs/op
+BenchmarkSetParamExisting-16             17748502    333.4 ns/op    232 B/op    5 allocs/op
+BenchmarkSetParamExistingUrlP-16        351103875    17.36 ns/op      0 B/op    0 allocs/op
+BenchmarkSetParamExistingStd-16         218821728    27.38 ns/op     16 B/op    1 allocs/op
+```
+
+### Parse query params and then set a new param
+
+```bash
+go test -test.bench BenchmarkParseSetParam -run=^Bench -benchmem -benchtime 5s ./test
+```
+
+```
+BenchmarkParseSetParamUrlP-16            10121535    598.9 ns/op    544 B/op     5 allocs/op
+BenchmarkParseSetParamStd-16              7931796    754.8 ns/op    576 B/op    11 allocs/op
+BenchmarkParseSetParamExistingUrlP-16    11554497    513.6 ns/op    224 B/op     4 allocs/op
+BenchmarkParseSetParamExistingStd-16      8157975    734.3 ns/op    576 B/op    11 allocs/op
+```

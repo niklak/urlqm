@@ -117,4 +117,52 @@ func AddQueryParam(query *string, key string, value string) {
 	*query = buf.String()
 }
 
-//TODO: SetQueryParam
+// SetQueryParam sets a parameter in the query string.
+func SetQueryParam(query *string, key string, value string) {
+	if key == "" {
+		return
+	}
+
+	found := false
+	var after string = *query
+
+	buf := strings.Builder{}
+
+	for after != "" {
+		var before string
+		before, after, _ = strings.Cut(after, key+"=")
+		if after == "" {
+			buf.WriteString(before)
+			break
+		}
+
+		before, sep := trimParamSeparator(before)
+		buf.WriteString(before)
+
+		_, after = cutStringByAnySep(after, separators)
+
+		if buf.Len() > 0 {
+			buf.WriteString(sep)
+		}
+		if !found {
+			found = true
+			buf.WriteString(url.QueryEscape(key))
+			buf.WriteByte('=')
+			buf.WriteString(url.QueryEscape(value))
+			if after != "" {
+				buf.WriteString(sep)
+			}
+		}
+	}
+
+	if !found {
+		if buf.Len() > 0 {
+			buf.WriteByte('&')
+		}
+		buf.WriteString(url.QueryEscape(key))
+		buf.WriteByte('=')
+		buf.WriteString(url.QueryEscape(value))
+	}
+
+	*query = buf.String()
+}

@@ -100,3 +100,4 @@ func SortParams(params []Param) {
 // TODO: readme
 // TODO: examples
 // TODO: optimize functions, after benchmarking
+// TODO: add DeleteParam, rename RemoveParam to TakeParam or ExtractParam

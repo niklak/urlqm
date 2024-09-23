@@ -302,3 +302,50 @@ func TestAddQueryParam(t *testing.T) {
 		})
 	}
 }
+
+func TestSetQueryParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+		value string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantQuery string
+	}{
+		{
+			name:      "Empty query no key",
+			args:      args{},
+			wantQuery: "",
+		},
+		{
+			name:      "Empty query",
+			args:      args{query: "", key: "a", value: "1"},
+			wantQuery: "a=1",
+		},
+		{
+			name:      "new key",
+			args:      args{query: "a=1&b=2&c=3", key: "d", value: "4"},
+			wantQuery: "a=1&b=2&c=3&d=4",
+		},
+		{
+			name:      "existing key",
+			args:      args{query: "a=1&b=2&c=3", key: "b", value: "5"},
+			wantQuery: "a=1&b=5&c=3",
+		},
+		{
+			name:      "existing multiple keys",
+			args:      args{query: "a=1&b=2&c=3&b=4&e=5", key: "b", value: "6"},
+			wantQuery: "a=1&b=6&c=3&e=5",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			SetQueryParam(&tt.args.query, tt.args.key, tt.args.value)
+			if tt.args.query != tt.wantQuery {
+				t.Errorf("TestSetQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+			}
+		})
+	}
+}
