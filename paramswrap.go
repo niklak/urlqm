@@ -99,3 +99,22 @@ func (p *Params) Set(key, value string) {
 func QueryParams(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)
 }
+
+// Delete removes the first param with given key from the params slice and returns its value.
+func (p *Params) Delete(key string) {
+	for i := 0; i < len(*p); i++ {
+		if (*p)[i].Key == key {
+			*p = append((*p)[:i], (*p)[i+1:]...)
+			return
+		}
+	}
+}
+
+// DeleteAll removes all params with given key from the params slice
+func (p *Params) DeleteAll(key string) {
+	for i := 0; i < len(*p); i++ {
+		if (*p)[i].Key == key {
+			*p = append((*p)[:i], (*p)[i+1:]...)
+		}
+	}
+}

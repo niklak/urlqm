@@ -280,6 +280,13 @@ func TestParams_Extract(t *testing.T) {
 			wantP:     Params{{"k1", "v1"}, {"k3", "v3"}},
 			wantValue: "v2",
 		},
+		{
+			name:      "Found many",
+			p:         Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}, {"k2", "v4"}},
+			args:      args{"k2"},
+			wantP:     Params{{"k1", "v1"}, {"k3", "v3"}, {"k2", "v4"}},
+			wantValue: "v2",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -375,6 +382,86 @@ func TestParams_Set(t *testing.T) {
 
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
 				t.Errorf("Params.Set() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_Delete(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name  string
+		p     Params
+		args  args
+		wantP Params
+	}{
+		{
+			name:  "Not found",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			args:  args{"k3"},
+			wantP: Params{{"k1", "v1"}, {"k2", "v2"}},
+		},
+		{
+			name:  "Found",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			args:  args{"k2"},
+			wantP: Params{{"k1", "v1"}, {"k3", "v3"}},
+		},
+		{
+			name:  "Found many",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}, {"k2", "v4"}},
+			args:  args{"k2"},
+			wantP: Params{{"k1", "v1"}, {"k3", "v3"}, {"k2", "v4"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.Delete(tt.args.key)
+
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.Extract() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_DeleteAll(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name  string
+		p     Params
+		args  args
+		wantP Params
+	}{
+		{
+			name:  "Not found",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			args:  args{"k3"},
+			wantP: Params{{"k1", "v1"}, {"k2", "v2"}},
+		},
+		{
+			name:  "Found",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+			args:  args{"k2"},
+			wantP: Params{{"k1", "v1"}, {"k3", "v3"}},
+		},
+		{
+			name:  "Found many",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}, {"k2", "v4"}},
+			args:  args{"k2"},
+			wantP: Params{{"k1", "v1"}, {"k3", "v3"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.p.DeleteAll(tt.args.key)
+
+			if !reflect.DeepEqual(tt.p, tt.wantP) {
+				t.Errorf("Params.ExtractAll() = %v, want %v", tt.p, tt.wantP)
 			}
 		})
 	}
