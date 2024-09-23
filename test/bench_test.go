@@ -147,24 +147,41 @@ func BenchmarkAddParamStd(b *testing.B) {
 	}
 }
 
-func BenchmarkRemoveParamAll(b *testing.B) {
+func BenchmarkDeleteParam(b *testing.B) {
 	var query string
 	for i := 0; i < b.N; i++ {
 		query = simpleRawQuery
-		urlp.RemoveQueryParamAll(&query, "key1")
+		urlp.DeleteQueryParam(&query, "key1")
 	}
 }
 
-func BenchmarkRemoveParamAllUrlP(b *testing.B) {
+func BenchmarkDeleteParamUrlP(b *testing.B) {
 	q, _ := urlp.QueryParams(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
-		query.RemoveAll("key1")
+		query.Delete("key1")
 	}
 }
 
-func BenchmarkRemoveParamAllStd(b *testing.B) {
+func BenchmarkDeleteParamAll(b *testing.B) {
+	var query string
+	for i := 0; i < b.N; i++ {
+		query = simpleRawQuery
+		urlp.DeleteQueryParamAll(&query, "key1")
+	}
+}
+
+func BenchmarkDeleteParamAllUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	var query urlp.Params
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.DeleteAll("key1")
+	}
+}
+
+func BenchmarkDeleteParamAllStd(b *testing.B) {
 	q, _ := url.ParseQuery(simpleRawQuery)
 	var query url.Values
 	for i := 0; i < b.N; i++ {
@@ -173,23 +190,39 @@ func BenchmarkRemoveParamAllStd(b *testing.B) {
 	}
 }
 
-func BenchmarkRemoveParam(b *testing.B) {
+func BenchmarkExtractParam(b *testing.B) {
 	var query string
 	for i := 0; i < b.N; i++ {
 		query = simpleRawQuery
-		urlp.RemoveQueryParam(&query, "key1")
+		urlp.ExtractQueryParam(&query, "key1")
 	}
 }
 
-func BenchmarkRemoveParamUrlP(b *testing.B) {
+func BenchmarkExtractParamUrlP(b *testing.B) {
 	q, _ := urlp.QueryParams(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
-		query.Remove("key1")
+		query.Extract("key1")
 	}
 }
 
+func BenchmarkExtractParamAll(b *testing.B) {
+	var query string
+	for i := 0; i < b.N; i++ {
+		query = simpleRawQuery
+		urlp.ExtractQueryParamAll(&query, "key1")
+	}
+}
+
+func BenchmarkExtractParamAllUrlP(b *testing.B) {
+	q, _ := urlp.QueryParams(simpleRawQuery)
+	var query urlp.Params
+	for i := 0; i < b.N; i++ {
+		query = q
+		query.ExtractAll("key1")
+	}
+}
 func BenchmarkSetParam(b *testing.B) {
 	var query string
 	for i := 0; i < b.N; i++ {

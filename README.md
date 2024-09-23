@@ -81,20 +81,33 @@ BenchmarkAddParamUrlP-16                 81422187    75.30 ns/op    320 B/op    
 BenchmarkAddParamStd-16                 172536259    39.46 ns/op     87 B/op    0 allocs/op
 ```
 
-### Remove all parameters
+### Delete parameters
 
 ```bash
-go test -test.bench BenchmarkRemoveParam -run=^Bench -benchmem -benchtime 5s ./test
+go test -test.bench BenchmarkDeleteParam -run=^Bench -benchmem -benchtime 5s ./test
 ```
 
 ```
-BenchmarkRemoveParamAll-16               16459984    361.6 ns/op    400 B/op    5 allocs/op
-BenchmarkRemoveParamAllUrlP-16          437953680    13.74 ns/op      0 B/op    0 allocs/op
-BenchmarkRemoveParamAllStd-16           706041596    8.505 ns/op      0 B/op    0 allocs/op
-BenchmarkRemoveParam-16                  75311437    77.57 ns/op    112 B/op    1 allocs/op
-BenchmarkRemoveParamUrlP-16             436867491    13.74 ns/op      0 B/op    0 allocs/op
+BenchmarkDeleteParam-16                  81099346    69.07 ns/op    112 B/op    1 allocs/op
+BenchmarkDeleteParamUrlP-16             437800039    13.75 ns/op      0 B/op    0 allocs/op
+BenchmarkDeleteParamAll-16               35512520    170.9 ns/op    144 B/op    2 allocs/op
+BenchmarkDeleteParamAllUrlP-16          439215859    13.61 ns/op      0 B/op    0 allocs/op
+BenchmarkDeleteParamAllStd-16           718473314    8.609 ns/op      0 B/op    0 allocs/op
 ```
 
+
+### Extract parameters
+
+```bash
+go test  -test.bench BenchmarkExtractParam  -run=^Bench  -benchmem  -benchtime 5s  ./test
+```
+
+```
+BenchmarkExtractParam-16                 81509199    73.68 ns/op    112 B/op    1 allocs/op
+BenchmarkExtractParamUrlP-16            383607861    15.49 ns/op      0 B/op    0 allocs/op
+BenchmarkExtractParamAll-16              18252739    323.3 ns/op    208 B/op    5 allocs/op
+BenchmarkExtractParamAllUrlP-16         410659760    14.57 ns/op      0 B/op    0 allocs/op
+```
 
 ### Set a parameter
 
