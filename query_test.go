@@ -119,7 +119,7 @@ func TestGetQueryParamAll(t *testing.T) {
 	}
 }
 
-func TestRemoveQueryParam(t *testing.T) {
+func TestExtractQueryParam(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -183,22 +183,22 @@ func TestRemoveQueryParam(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValue, err := RemoveQueryParam(&tt.args.query, tt.args.key)
+			gotValue, err := ExtractQueryParam(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotValue != tt.wantValue {
-				t.Errorf("RemoveQueryParam() = %v, want %v", gotValue, tt.wantValue)
+				t.Errorf("ExtractQueryParam() = %v, want %v", gotValue, tt.wantValue)
 			}
 			if tt.args.query != tt.wantQuery {
-				t.Errorf("RemoveQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+				t.Errorf("ExtractQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
 }
 
-func TestRemoveQueryParamAll(t *testing.T) {
+func TestExtractQueryParamAll(t *testing.T) {
 	type args struct {
 		query string
 		key   string
@@ -244,17 +244,17 @@ func TestRemoveQueryParamAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotValues, err := RemoveQueryParamAll(&tt.args.query, tt.args.key)
+			gotValues, err := ExtractQueryParamAll(&tt.args.query, tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("RemoveQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ExtractQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("RemoveQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("ExtractQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("RemoveQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
+				t.Errorf("ExtractQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 		})
 	}

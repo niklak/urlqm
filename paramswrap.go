@@ -44,8 +44,8 @@ func (p *Params) GetAll(key string) []string {
 	return values
 }
 
-// Remove removes the first param with given key from the params slice and returns its value.
-func (p *Params) Remove(key string) (value string) {
+// Extract removes the first param with given key from the params slice and returns its value.
+func (p *Params) Extract(key string) (value string) {
 	for i := 0; i < len(*p); i++ {
 		if (*p)[i].Key == key {
 			value = (*p)[i].Value
@@ -56,8 +56,8 @@ func (p *Params) Remove(key string) (value string) {
 	return ""
 }
 
-// RemoveAll removes all params with given key from the params slice and returns their values.
-func (p *Params) RemoveAll(key string) (values []string) {
+// ExtractAll removes all params with given key from the params slice and returns their values.
+func (p *Params) ExtractAll(key string) (values []string) {
 	for i := 0; i < len(*p); i++ {
 		if (*p)[i].Key == key {
 			values = append(values, (*p)[i].Value)

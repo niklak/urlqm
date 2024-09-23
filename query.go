@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// RemoveQueryParam removes and returns the value of a parameter from the query string.
-func RemoveQueryParam(query *string, key string) (value string, err error) {
+// ExtractQueryParam removes and returns the value of a parameter from the query string.
+func ExtractQueryParam(query *string, key string) (value string, err error) {
 	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
 	if after == "" {
@@ -34,8 +34,8 @@ func RemoveQueryParam(query *string, key string) (value string, err error) {
 	return
 }
 
-// RemoveQueryParamAll removes and returns a slice of values for a parameter from the query string.
-func RemoveQueryParamAll(query *string, key string) (values []string, err error) {
+// ExtractQueryParamAll removes and returns a slice of values for a parameter from the query string.
+func ExtractQueryParamAll(query *string, key string) (values []string, err error) {
 	var after string = *query
 
 	buf := strings.Builder{}

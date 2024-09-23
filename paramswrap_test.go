@@ -255,7 +255,7 @@ func TestParams_GetAll(t *testing.T) {
 	}
 }
 
-func TestParams_Remove(t *testing.T) {
+func TestParams_Extract(t *testing.T) {
 	type args struct {
 		key string
 	}
@@ -283,18 +283,18 @@ func TestParams_Remove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotValue := tt.p.Remove(tt.args.key); gotValue != tt.wantValue {
-				t.Errorf("Params.Remove() = %v, want %v", gotValue, tt.wantValue)
+			if gotValue := tt.p.Extract(tt.args.key); gotValue != tt.wantValue {
+				t.Errorf("Params.Extract() = %v, want %v", gotValue, tt.wantValue)
 			}
 
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
-				t.Errorf("Params.Add() = %v, want %v", tt.p, tt.wantP)
+				t.Errorf("Params.Extract() = %v, want %v", tt.p, tt.wantP)
 			}
 		})
 	}
 }
 
-func TestParams_RemoveAll(t *testing.T) {
+func TestParams_ExtractAll(t *testing.T) {
 	type args struct {
 		key string
 	}
@@ -322,12 +322,12 @@ func TestParams_RemoveAll(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotValues := tt.p.RemoveAll(tt.args.key); !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("Params.RemoveAll() = %v, want %v", gotValues, tt.wantValues)
+			if gotValues := tt.p.ExtractAll(tt.args.key); !reflect.DeepEqual(gotValues, tt.wantValues) {
+				t.Errorf("Params.ExtractAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
-				t.Errorf("Params.RemoveAll() = %v, want %v", tt.p, tt.wantP)
+				t.Errorf("Params.ExtractAll() = %v, want %v", tt.p, tt.wantP)
 			}
 		})
 	}
