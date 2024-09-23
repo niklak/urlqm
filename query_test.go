@@ -223,10 +223,10 @@ func TestExtractQueryParamAll(t *testing.T) {
 			wantQuery:  "a=1&c=3&d=4",
 		},
 		{
-			name:       "Found",
+			name:       "Found many",
 			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6", key: "b"},
 			wantValues: []string{"2", "4", "6"},
-			wantQuery:  "a=1&c=3&d=4",
+			wantQuery:  "a=1&c=3&d=5",
 		},
 		{
 			name:       "encoded",
@@ -237,7 +237,7 @@ func TestExtractQueryParamAll(t *testing.T) {
 		{
 			name:       "bad encoding",
 			args:       args{query: `q=%-daily+news%22&theme=dark`, key: "q"},
-			wantValues: []string{},
+			wantValues: nil,
 			wantQuery:  `q=%-daily+news%22&theme=dark`,
 			wantErr:    true,
 		},
@@ -249,12 +249,13 @@ func TestExtractQueryParamAll(t *testing.T) {
 				t.Errorf("ExtractQueryParamAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(gotValues, tt.wantValues) {
 				t.Errorf("ExtractQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
 			}
 
-			if !reflect.DeepEqual(gotValues, tt.wantValues) {
-				t.Errorf("ExtractQueryParamAll() = %v, want %v", gotValues, tt.wantValues)
+			if !reflect.DeepEqual(tt.args.query, tt.wantQuery) {
+				t.Errorf("ExtractQueryParamAll() = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}
@@ -345,6 +346,105 @@ func TestSetQueryParam(t *testing.T) {
 			SetQueryParam(&tt.args.query, tt.args.key, tt.args.value)
 			if tt.args.query != tt.wantQuery {
 				t.Errorf("TestSetQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+			}
+		})
+	}
+}
+
+func TestDeleteQueryParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name      string
+		wantQuery string
+		args      args
+	}{
+		{
+			name:      "Not found",
+			args:      args{query: "a=1&b=2&c=3", key: "d"},
+			wantQuery: "a=1&b=2&c=3",
+		},
+		{
+			name:      "Found",
+			args:      args{query: "a=1&b=2&c=3&d=4", key: "b"},
+			wantQuery: "a=1&c=3&d=4",
+		},
+		{
+			name:      "Found empty",
+			args:      args{query: "a=1&b=&c=3&d=4", key: "b"},
+			wantQuery: "a=1&c=3&d=4",
+		},
+		{
+			name:      "Single param",
+			args:      args{query: "a=1", key: "a"},
+			wantQuery: "",
+		},
+		{
+			name:      "Found with deprecated separator",
+			args:      args{query: "a=1;b=2;c=3", key: "b"},
+			wantQuery: "a=1;c=3",
+		},
+		{
+			name:      "Found with mixed separators",
+			args:      args{query: "a=1;b=2&c=3&d=4", key: "b"},
+			wantQuery: "a=1;c=3&d=4",
+		},
+		{
+			name:      "encoded",
+			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantQuery: `theme=dark`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			DeleteQueryParam(&tt.args.query, tt.args.key)
+
+			if tt.args.query != tt.wantQuery {
+				t.Errorf("DeleteQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
+			}
+		})
+	}
+}
+
+func TestDeleteQueryParamAll(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantQuery string
+	}{
+		{
+			name:      "Not found",
+			args:      args{query: "a=1&b=2&c=3", key: "d"},
+			wantQuery: "a=1&b=2&c=3",
+		},
+		{
+			name:      "Found",
+			args:      args{query: "a=1&b=2&c=3&d=4", key: "b"},
+			wantQuery: "a=1&c=3&d=4",
+		},
+		{
+			name:      "Found many",
+			args:      args{query: "a=1&b=2&c=3&b=4&d=5&b=6", key: "b"},
+			wantQuery: "a=1&c=3&d=5",
+		},
+		{
+			name:      "encoded",
+			args:      args{query: `q=%22daily+news%22&theme=dark`, key: "q"},
+			wantQuery: `theme=dark`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			DeleteQueryParamAll(&tt.args.query, tt.args.key)
+
+			if !reflect.DeepEqual(tt.args.query, tt.wantQuery) {
+				t.Errorf("DeleteQueryParamAll() = %v, want %v", tt.args.query, tt.wantQuery)
 			}
 		})
 	}

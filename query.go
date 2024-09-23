@@ -39,17 +39,19 @@ func ExtractQueryParamAll(query *string, key string) (values []string, err error
 	var after string = *query
 
 	buf := strings.Builder{}
+	found := false
 
 	for after != "" {
 		var before string
 		before, after, _ = strings.Cut(after, key+"=")
 		if after == "" {
+			buf.WriteString(before)
 			break
 		}
-
+		found = true
 		before, sep := trimParamSeparator(before)
-
 		buf.WriteString(before)
+
 		var value string
 		value, after = cutStringByAnySep(after, separators)
 		value, err = url.QueryUnescape(value)
@@ -60,10 +62,11 @@ func ExtractQueryParamAll(query *string, key string) (values []string, err error
 		if buf.Len() > 0 && after != "" {
 			buf.WriteString(sep)
 		}
-		buf.WriteString(after)
 	}
 
-	*query = buf.String()
+	if found {
+		*query = buf.String()
+	}
 
 	return
 }
@@ -165,4 +168,59 @@ func SetQueryParam(query *string, key string, value string) {
 	}
 
 	*query = buf.String()
+}
+
+// DeleteQueryParam removes a parameter from the query string by key.
+func DeleteQueryParam(query *string, key string) {
+	before, after, _ := strings.Cut(*query, key+"=")
+	//if the given param wasn't found or it was without value
+	if after == "" {
+		return
+	}
+
+	var sep string
+	before, sep = trimParamSeparator(before)
+	buf := strings.Builder{}
+	buf.WriteString(before)
+
+	_, after = cutStringByAnySep(after, separators)
+
+	if buf.Len() > 0 && after != "" {
+		buf.WriteString(sep)
+	}
+	buf.WriteString(after)
+
+	*query = buf.String()
+}
+
+// DeleteQueryParamAll removes all parameters from the query string by key.
+func DeleteQueryParamAll(query *string, key string) {
+	var after string = *query
+
+	buf := strings.Builder{}
+	found := false
+
+	for after != "" {
+		var before string
+		before, after, _ = strings.Cut(after, key+"=")
+		if after == "" {
+			buf.WriteString(before)
+			break
+		}
+		found = true
+		before, sep := trimParamSeparator(before)
+
+		buf.WriteString(before)
+		_, after = cutStringByAnySep(after, separators)
+
+		if buf.Len() > 0 && after != "" {
+			buf.WriteString(sep)
+		}
+
+	}
+
+	if found {
+		*query = buf.String()
+	}
+
 }
