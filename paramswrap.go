@@ -118,3 +118,13 @@ func (p *Params) DeleteAll(key string) {
 		}
 	}
 }
+
+// Has returns true if the params slice contains a param with given key.
+func (p Params) Has(key string) bool {
+	for _, param := range p {
+		if param.Key == key {
+			return true
+		}
+	}
+	return false
+}

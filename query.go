@@ -222,5 +222,9 @@ func DeleteQueryParamAll(query *string, key string) {
 	if found {
 		*query = buf.String()
 	}
+}
 
+// HasQueryParam returns true if the query string contains a parameter with the given key.
+func HasQueryParam(query string, key string) bool {
+	return strings.Index(query, key+"=") > 0
 }

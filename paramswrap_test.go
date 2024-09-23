@@ -11,7 +11,6 @@ func TestParams_Encode(t *testing.T) {
 		p          Params
 		wantEncode string
 	}{
-		// TODO: Add test cases.
 		{name: "No params", p: Params{}, wantEncode: ""},
 		{name: "No params nil", p: nil, wantEncode: ""},
 		{name: "Simple", p: Params{{"a", "1"}}, wantEncode: "a=1"},
@@ -421,7 +420,7 @@ func TestParams_Delete(t *testing.T) {
 			tt.p.Delete(tt.args.key)
 
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
-				t.Errorf("Params.Extract() = %v, want %v", tt.p, tt.wantP)
+				t.Errorf("Params.Delete() = %v, want %v", tt.p, tt.wantP)
 			}
 		})
 	}
@@ -461,7 +460,39 @@ func TestParams_DeleteAll(t *testing.T) {
 			tt.p.DeleteAll(tt.args.key)
 
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
-				t.Errorf("Params.ExtractAll() = %v, want %v", tt.p, tt.wantP)
+				t.Errorf("Params.DeleteAll() = %v, want %v", tt.p, tt.wantP)
+			}
+		})
+	}
+}
+
+func TestParams_Has(t *testing.T) {
+	type args struct {
+		key string
+	}
+	tests := []struct {
+		name string
+		p    Params
+		args args
+		want bool
+	}{
+		{
+			name: "Found",
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}},
+			args: args{"k2"},
+			want: true,
+		},
+		{
+			name: "Not found",
+			p:    Params{{"k1", "v1"}, {"k2", "v2"}},
+			args: args{"k3"},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.p.Has(tt.args.key); got != tt.want {
+				t.Errorf("Params.Has() = %v, want %v", got, tt.want)
 			}
 		})
 	}

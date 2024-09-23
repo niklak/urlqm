@@ -449,3 +449,38 @@ func TestDeleteQueryParamAll(t *testing.T) {
 		})
 	}
 }
+
+func TestHasQueryParam(t *testing.T) {
+	type args struct {
+		query string
+		key   string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "Not found",
+			args: args{query: "a=1&b=2&c=3", key: "d"},
+			want: false,
+		},
+		{
+			name: "Found",
+			args: args{query: "a=1&b=2&c=3", key: "b"},
+			want: true,
+		},
+		{
+			name: "encoded key",
+			args: args{query: "%D1%81%D0%BB%D0%BE%D0%B2%D0%BE=%D0%BA%D1%96%D1%82", key: "слово"},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := HasQueryParam(tt.args.query, tt.args.key); got != tt.want {
+				t.Errorf("HasQueryParam() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
