@@ -60,6 +60,7 @@ func ExtractQueryParamAll(query *string, key string) (values []string, err error
 		}
 		values = append(values, value)
 		if buf.Len() > 0 && after != "" {
+			//TODO: fix: a=1&b=2&c=3&b=4&d=5&b=6&b=8, tail &
 			buf.WriteString(sep)
 		}
 	}
@@ -228,3 +229,5 @@ func DeleteQueryParamAll(query *string, key string) {
 func HasQueryParam(query string, key string) bool {
 	return strings.Index(query, key+"=") > 0
 }
+
+// TODO: AddQueryParams(query *string, key string, values []string)

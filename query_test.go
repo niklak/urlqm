@@ -233,8 +233,8 @@ func TestExtractQueryParamAll(t *testing.T) {
 		},
 		{
 			name:       "Found many",
-			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6", key: "b"},
-			wantValues: []string{"2", "4", "6"},
+			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6&c=8", key: "b"},
+			wantValues: []string{"2", "4", "6", "8"},
 			wantQuery:  "a=1&c=3&d=5",
 		},
 		{
