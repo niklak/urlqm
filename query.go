@@ -229,4 +229,5 @@ func HasQueryParam(query string, key string) bool {
 	return strings.Index(query, key+"=") > 0
 }
 
-// TODO: AddQueryParams(query *string, key string, values []string)
+// TODO: AddQueryParam(query *string, key string, values []string)
+// TODO: decide what to do with key-encoding

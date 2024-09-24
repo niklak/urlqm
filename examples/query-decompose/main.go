@@ -20,7 +20,7 @@ func main() {
 	}
 	fmt.Printf("URL: %s\n", u)
 
-	// To get value of a q parameter using a std net/url package,
+	// To get value of a `q` parameter using a std net/url package,
 	// unfortunately, we have also to parse the other parameters.
 	// So this isn't very efficient for large URLs with many parameters when you need just a few of them.
 	// also this was a bad approach, because if there is an error, you will not know about it,
