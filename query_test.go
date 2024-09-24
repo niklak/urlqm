@@ -189,6 +189,12 @@ func TestExtractQueryParam(t *testing.T) {
 			wantQuery: `q=%-daily+news%22&theme=dark`,
 			wantErr:   true,
 		},
+		{
+			name:      "Found last",
+			args:      args{query: "a=1&b=2&c=3&d=4", key: "d"},
+			wantValue: "4",
+			wantQuery: "a=1&b=2&c=3",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -233,7 +239,7 @@ func TestExtractQueryParamAll(t *testing.T) {
 		},
 		{
 			name:       "Found many",
-			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6&c=8", key: "b"},
+			args:       args{query: "a=1&b=2&c=3&b=4&d=5&b=6&b=8", key: "b"},
 			wantValues: []string{"2", "4", "6", "8"},
 			wantQuery:  "a=1&c=3&d=5",
 		},
@@ -439,7 +445,7 @@ func TestDeleteQueryParamAll(t *testing.T) {
 		},
 		{
 			name:      "Found many",
-			args:      args{query: "a=1&b=2&c=3&b=4&d=5&b=6", key: "b"},
+			args:      args{query: "a=1&b=2&c=3&b=4&d=5&b=6&b=8", key: "b"},
 			wantQuery: "a=1&c=3&d=5",
 		},
 		{

@@ -59,8 +59,7 @@ func ExtractQueryParamAll(query *string, key string) (values []string, err error
 			return nil, err
 		}
 		values = append(values, value)
-		if buf.Len() > 0 && after != "" {
-			//TODO: fix: a=1&b=2&c=3&b=4&d=5&b=6&b=8, tail &
+		if buf.Len() > 0 && !strings.HasPrefix(after, key) {
 			buf.WriteString(sep)
 		}
 	}
@@ -214,7 +213,7 @@ func DeleteQueryParamAll(query *string, key string) {
 		buf.WriteString(before)
 		_, after = cutStringByAnySep(after, separators)
 
-		if buf.Len() > 0 && after != "" {
+		if buf.Len() > 0 && !strings.HasPrefix(after, key) {
 			buf.WriteString(sep)
 		}
 

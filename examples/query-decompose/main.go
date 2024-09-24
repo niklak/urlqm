@@ -10,7 +10,7 @@ import (
 func main() {
 	var rawURL = "https://www.example.com/?q=a+testing+query&region=1&region=3&region=5" +
 		"&some-hash=EgZjaHJvbWUyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggD" +
-		"EAAYQDIGCAQQABhAMgYIBRAAGEAyBggGAYQDIGCAcQABhAMgYICBAAGEDSAQgxMjQxajBqMagCArACAQ&first=11&brightness=90%&region=4"
+		"EAAYQDIGCAQQABhAMgYIBRAAGEAyBggGAYQDIGCAcQABhAMgYICBAAGEDSAQgxMjQxajBqMagCArACAQ&first=11&brightness=90%"
 
 	// At this point url.Parse will not parse a query component
 	// because it can be inefficient for urls with many parameters.
