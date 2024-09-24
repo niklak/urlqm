@@ -27,7 +27,7 @@ func getParamStdAll(query, key string) ([]string, error) {
 }
 
 func getParamUrlP(query string, key string) (string, error) {
-	q, err := urlp.QueryParams(query)
+	q, err := urlp.ParseQuery(query)
 	if err != nil {
 		return "", err
 	}
@@ -35,7 +35,7 @@ func getParamUrlP(query string, key string) (string, error) {
 }
 
 func getParamUrlPAll(query string, key string) ([]string, error) {
-	q, err := urlp.QueryParams(query)
+	q, err := urlp.ParseQuery(query)
 	if err != nil {
 		return []string{}, err
 	}
@@ -107,14 +107,14 @@ func BenchmarkEncodeParamsStd(b *testing.B) {
 }
 
 func BenchmarkEncodeParamsUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	for i := 0; i < b.N; i++ {
 		_ = q.Encode()
 	}
 }
 
 func BenchmarkEncodeParamsSortedUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	for i := 0; i < b.N; i++ {
 		q.Sort()
 		_ = q.Encode()
@@ -130,7 +130,7 @@ func BenchmarkAddParam(b *testing.B) {
 }
 
 func BenchmarkAddParamUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -156,7 +156,7 @@ func BenchmarkDeleteParam(b *testing.B) {
 }
 
 func BenchmarkDeleteParamUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -173,7 +173,7 @@ func BenchmarkDeleteParamAll(b *testing.B) {
 }
 
 func BenchmarkDeleteParamAllUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -199,7 +199,7 @@ func BenchmarkExtractParam(b *testing.B) {
 }
 
 func BenchmarkExtractParamUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -216,7 +216,7 @@ func BenchmarkExtractParamAll(b *testing.B) {
 }
 
 func BenchmarkExtractParamAllUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -232,7 +232,7 @@ func BenchmarkSetParam(b *testing.B) {
 }
 
 func BenchmarkSetParamUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -258,7 +258,7 @@ func BenchmarkSetParamExisting(b *testing.B) {
 }
 
 func BenchmarkSetParamExistingUrlP(b *testing.B) {
-	q, _ := urlp.QueryParams(simpleRawQuery)
+	q, _ := urlp.ParseQuery(simpleRawQuery)
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
 		query = q
@@ -278,7 +278,7 @@ func BenchmarkSetParamExistingStd(b *testing.B) {
 func BenchmarkParseSetParamUrlP(b *testing.B) {
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
-		query, _ = urlp.QueryParams(simpleRawQuery)
+		query, _ = urlp.ParseQuery(simpleRawQuery)
 		query.Set("key10", "new+value")
 	}
 }
@@ -294,7 +294,7 @@ func BenchmarkParseSetParamStd(b *testing.B) {
 func BenchmarkParseSetParamExistingUrlP(b *testing.B) {
 	var query urlp.Params
 	for i := 0; i < b.N; i++ {
-		query, _ = urlp.QueryParams(simpleRawQuery)
+		query, _ = urlp.ParseQuery(simpleRawQuery)
 		query.Set("key1", "new+value")
 	}
 }
@@ -318,12 +318,12 @@ func BenchmarkHasQueryParam(b *testing.B) {
 func BenchmarkHasQueryParamUrlP(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
-		q, _ := urlp.QueryParams(query)
+		q, _ := urlp.ParseQuery(query)
 		q.Has("uuid")
 	}
 }
 
-func BenchmarkHasQueryParamStd(b *testing.B) {
+func BenchmarkHasParseQuerytd(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
 		q, _ := url.ParseQuery(query)

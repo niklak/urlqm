@@ -39,7 +39,7 @@ func TestParams_Encode(t *testing.T) {
 	}
 }
 
-func TestQueryParams(t *testing.T) {
+func TestParseQuery(t *testing.T) {
 	type args struct {
 		rawQuery string
 	}
@@ -88,13 +88,13 @@ func TestQueryParams(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotP, err := QueryParams(tt.args.rawQuery)
+			gotP, err := ParseQuery(tt.args.rawQuery)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("QueryParams() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseQuery() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotP, tt.wantP) {
-				t.Errorf("QueryParams() = %v, want %v", gotP, tt.wantP)
+				t.Errorf("ParseQuery() = %v, want %v", gotP, tt.wantP)
 			}
 		})
 	}
@@ -149,6 +149,12 @@ func TestParams_SetOrder(t *testing.T) {
 			args:  args{order: []string{"q", "a", "b"}},
 			p:     Params{{"b", "2"}, {"a", "1"}, {"q", "3"}},
 			wantP: Params{{"q", "3"}, {"a", "1"}, {"b", "2"}},
+		},
+		{
+			name:  "With Same keys",
+			args:  args{order: []string{"a", "a", "a", "b"}},
+			p:     Params{{"b", "2"}, {"a", "1"}, {"q", "3"}, {"a", "4"}, {"a", "5"}},
+			wantP: Params{{"a", "1"}, {"a", "4"}, {"a", "5"}, {"b", "2"}, {"q", "3"}},
 		},
 	}
 	for _, tt := range tests {

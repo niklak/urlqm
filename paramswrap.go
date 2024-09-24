@@ -95,8 +95,8 @@ func (p *Params) Set(key, value string) {
 
 }
 
-// QueryParams takes a query string and returns a slice of [Param]. See [ParseParams].
-func QueryParams(rawQuery string) (p Params, err error) {
+// ParseQuery takes a query string and returns a slice of [Param]. See [ParseParams].
+func ParseQuery(rawQuery string) (p Params, err error) {
 	return ParseParams(rawQuery)
 }
 
