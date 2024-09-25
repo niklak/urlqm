@@ -71,7 +71,8 @@ func ParseParams(query string) ([]Param, error) {
 	return params, err
 }
 
-// SortOrderParams sorts the Param slice based on the provided order members while omitted params are placed as it was.
+// SortOrderParams sorts the Param slice
+// based on the provided order members while omitted params are placed as it was.
 func SortOrderParams(paramsPtr *[]Param, order ...string) {
 
 	restParams := *paramsPtr
@@ -98,4 +99,3 @@ func SortParams(params []Param) {
 }
 
 // TODO: readme
-// TODO: examples

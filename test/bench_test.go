@@ -7,7 +7,8 @@ import (
 	"github.com/niklak/urlp"
 )
 
-const simpleRawQuery = "key1=value&key2=a+long+value&key3=a+little+bit+longer+value&key1=the+other+value+&uuid=aa83de98-5b1c-40af-8607-390f7b9271c1"
+const simpleRawQuery = "q=%D1%81%D0%BE%D1%82%D0%BD%D1%96+%D0%BC%D1%96%D0%BB%D1%8C%D0%B9%D0%BE%D0%BD%D1%96%D0%B2&" +
+	"key1=value&key2=a+long+value&key3=a+little+bit+longer+value&key1=the+other+value+&uuid=aa83de98-5b1c-40af-8607-390f7b9271c1"
 
 func getParamStd(query string, key string) (string, error) {
 	// Because of if you need to get even a one key, you have to parse the whole query once or more times.
@@ -323,7 +324,7 @@ func BenchmarkHasQueryParamUrlP(b *testing.B) {
 	}
 }
 
-func BenchmarkHasParseQuerytd(b *testing.B) {
+func BenchmarkHasQueryParamStd(b *testing.B) {
 	query := simpleRawQuery
 	for i := 0; i < b.N; i++ {
 		q, _ := url.ParseQuery(query)
