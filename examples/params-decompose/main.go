@@ -79,8 +79,8 @@ func main() {
 
 	// Add a single parameter to the end of the parameter list.
 	queryParams.Add("region", "1")
-	queryParams.Add("region", "2")
-	queryParams.Add("region", "3")
+	// Or add a parameter with multiple values
+	queryParams.Add("region", "2", "3")
 
 	// Take a single parameter's value by key and remove it from the parameter list
 	region := queryParams.Extract("region")

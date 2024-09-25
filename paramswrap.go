@@ -19,8 +19,19 @@ func (p *Params) SetOrder(order ...string) {
 }
 
 // Add adds a new param to the params slice.
-func (p *Params) Add(key, value string) {
-	*p = append(*p, Param{key, value})
+// This function accepts multiple values for a single param.
+func (p *Params) Add(key string, values ...string) {
+	if key == "" {
+		return
+	}
+	if len(values) == 0 {
+		*p = append(*p, Param{key, ""})
+		return
+	}
+	for _, value := range values {
+		*p = append(*p, Param{key, value})
+	}
+
 }
 
 // Get returns the first value of a param with given key or an empty string if not found.

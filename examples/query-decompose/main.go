@@ -75,7 +75,9 @@ func main() {
 
 	// To add a new parameter to the query string we can use AddQueryParam function:
 	// let's bring back our regions
-	urlp.AddQueryParam(&u.RawQuery, "region", "1", "2", "3")
+	urlp.AddQueryParam(&u.RawQuery, "region", "1")
+	// It's possible to add multiple values for the same key:
+	urlp.AddQueryParam(&u.RawQuery, "region", "2", "3")
 
 	// If we want to get a value and remove it from query immediately, we can use ExtractQueryParam function,
 	// to take the first value with the key, and remove it from query string

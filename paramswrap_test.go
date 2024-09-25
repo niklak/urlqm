@@ -169,8 +169,8 @@ func TestParams_SetOrder(t *testing.T) {
 
 func TestParams_Add(t *testing.T) {
 	type args struct {
-		key   string
-		value string
+		key    string
+		values []string
 	}
 	tests := []struct {
 		name  string
@@ -181,13 +181,37 @@ func TestParams_Add(t *testing.T) {
 		{
 			name:  "Simple",
 			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
-			args:  args{"k3", "v3"},
+			args:  args{"k3", []string{"v3"}},
 			wantP: Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}},
+		},
+		{
+			name:  "Add multiple values",
+			p:     Params{{"k1", "v1"}, {"k2", "v2"}},
+			args:  args{"k3", []string{"v3", "v4"}},
+			wantP: Params{{"k1", "v1"}, {"k2", "v2"}, {"k3", "v3"}, {"k3", "v4"}},
+		},
+		{
+			name:  "empty params no value",
+			p:     Params{},
+			args:  args{"k3", []string{""}},
+			wantP: Params{{"k3", ""}},
+		},
+		{
+			name:  "empty params with no value",
+			p:     Params{},
+			args:  args{"k3", []string{}},
+			wantP: Params{{"k3", ""}},
+		},
+		{
+			name:  "empty params with no key",
+			p:     Params{},
+			args:  args{"", []string{"v3"}},
+			wantP: Params{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.p.Add(tt.args.key, tt.args.value)
+			tt.p.Add(tt.args.key, tt.args.values...)
 			if !reflect.DeepEqual(tt.p, tt.wantP) {
 				t.Errorf("Params.Add() = %v, want %v", tt.p, tt.wantP)
 			}

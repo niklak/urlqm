@@ -120,7 +120,6 @@ func AddQueryParam(query *string, key string, values ...string) {
 }
 
 // SetQueryParam sets a parameter in the query string.
-// This function accepts multiple values for a single param.
 func SetQueryParam(query *string, key string, value string) {
 	if key == "" {
 		return
