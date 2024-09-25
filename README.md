@@ -75,9 +75,9 @@ go test -test.bench BenchmarkAddParam -run=^Bench -benchmem -benchtime 5s ./test
 ```
 
 ```
-BenchmarkAddParam-16                     51030302    115.5 ns/op    384 B/op    2 allocs/op
-BenchmarkAddParamUrlP-16                 81422187    75.30 ns/op    320 B/op    1 allocs/op
-BenchmarkAddParamStd-16                 172536259    39.46 ns/op     87 B/op    0 allocs/op
+BenchmarkAddParam-16                     51663586    119.8 ns/op    384 B/op    2 allocs/op
+BenchmarkAddParamUrlP-16                 76758801    74.41 ns/op    320 B/op    1 allocs/op
+BenchmarkAddParamStd-16                 156120369    50.65 ns/op     96 B/op    0 allocs/op
 ```
 
 ### Delete parameters

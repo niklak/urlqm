@@ -103,7 +103,8 @@ func GetQueryParamAll(query, key string) (values []string, err error) {
 }
 
 // AddQueryParam adds a parameter to the query string.
-func AddQueryParam(query *string, key string, value string) {
+// This function accepts multiple values for a single param.
+func AddQueryParam(query *string, key string, values ...string) {
 
 	if key == "" {
 		return
@@ -114,13 +115,12 @@ func AddQueryParam(query *string, key string, value string) {
 		buf.WriteString(*query)
 		buf.WriteByte('&')
 	}
-	buf.WriteString(url.QueryEscape(key))
-	buf.WriteByte('=')
-	buf.WriteString(url.QueryEscape(value))
+	writeParam(&buf, "&", key, values...)
 	*query = buf.String()
 }
 
 // SetQueryParam sets a parameter in the query string.
+// This function accepts multiple values for a single param.
 func SetQueryParam(query *string, key string, value string) {
 	if key == "" {
 		return
@@ -149,9 +149,7 @@ func SetQueryParam(query *string, key string, value string) {
 		}
 		if !found {
 			found = true
-			buf.WriteString(url.QueryEscape(key))
-			buf.WriteByte('=')
-			buf.WriteString(url.QueryEscape(value))
+			writeParam(&buf, sep, key, value)
 			if after != "" {
 				buf.WriteString(sep)
 			}
@@ -162,9 +160,7 @@ func SetQueryParam(query *string, key string, value string) {
 		if buf.Len() > 0 {
 			buf.WriteByte('&')
 		}
-		buf.WriteString(url.QueryEscape(key))
-		buf.WriteByte('=')
-		buf.WriteString(url.QueryEscape(value))
+		writeParam(&buf, "&", key, value)
 	}
 
 	*query = buf.String()
@@ -229,5 +225,24 @@ func HasQueryParam(query string, key string) bool {
 	return strings.Index(query, key+"=") > 0
 }
 
-// TODO: AddQueryParam(query *string, key string, values []string)
+func writeParam(buf *strings.Builder, sep, key string, values ...string) {
+	buf.WriteString(url.QueryEscape(key))
+	buf.WriteByte('=')
+	if len(values) == 0 {
+		return
+	}
+
+	buf.WriteString(url.QueryEscape(values[0]))
+
+	if len(values) > 1 {
+
+		for _, value := range values[1:] {
+			buf.WriteString(sep)
+			buf.WriteString(url.QueryEscape(key))
+			buf.WriteByte('=')
+			buf.WriteString(url.QueryEscape(value))
+		}
+	}
+}
+
 // TODO: decide what to do with key-encoding

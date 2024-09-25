@@ -278,9 +278,9 @@ func TestExtractQueryParamAll(t *testing.T) {
 
 func TestAddQueryParam(t *testing.T) {
 	type args struct {
-		query string
-		key   string
-		value string
+		query  string
+		key    string
+		values []string
 	}
 	tests := []struct {
 		name      string
@@ -299,18 +299,23 @@ func TestAddQueryParam(t *testing.T) {
 		},
 		{
 			name:      "Simple addition",
-			args:      args{query: "a=1&b=2", key: "c", value: "3"},
+			args:      args{query: "a=1&b=2", key: "c", values: []string{"3"}},
 			wantQuery: "a=1&b=2&c=3",
 		},
 		{
 			name:      "Encode key and value",
-			args:      args{query: "a=1=b=2", key: "слово", value: "опис"},
+			args:      args{query: "a=1=b=2", key: "слово", values: []string{"опис"}},
 			wantQuery: "a=1=b=2&%D1%81%D0%BB%D0%BE%D0%B2%D0%BE=%D0%BE%D0%BF%D0%B8%D1%81",
+		},
+		{
+			name:      "Add value to existing key",
+			args:      args{query: "a=1&b=2", key: "a", values: []string{"3", "6"}},
+			wantQuery: "a=1&b=2&a=3&a=6",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			AddQueryParam(&tt.args.query, tt.args.key, tt.args.value)
+			AddQueryParam(&tt.args.query, tt.args.key, tt.args.values...)
 
 			if tt.args.query != tt.wantQuery {
 				t.Errorf("TestAddQueryParam() query = %v, want %v", tt.args.query, tt.wantQuery)
@@ -354,6 +359,11 @@ func TestSetQueryParam(t *testing.T) {
 			name:      "existing multiple keys",
 			args:      args{query: "a=1&b=2&c=3&b=4&e=5", key: "b", value: "6"},
 			wantQuery: "a=1&b=6&c=3&e=5",
+		},
+		{
+			name:      "no value",
+			args:      args{query: "a=1&b=2&c=3", key: "b"},
+			wantQuery: "a=1&b=&c=3",
 		},
 	}
 	for _, tt := range tests {
