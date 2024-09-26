@@ -78,7 +78,7 @@ fmt.Println(values)
 
 
 <details>
-<summary>Extract a parameter value</summary>
+<summary>Extract a parameter value (get and remove)</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2")
@@ -182,9 +182,6 @@ fmt.Println(u)
 </details>
 
 
-
-### 
-
 <details>
 <summary>Check if query string contains a parameter</summary>
 
@@ -200,8 +197,258 @@ fmt.Println("c:", HasQueryParam(u.RawQuery, "c"))
 
 </details>
 
+### Manipulations with query parameter list
+
+<details>
+<summary>Parse a query string to the parameter list</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+fmt.Printf("%+v\n", params)
+```
+
+</details>
+
+<details>
+<summary>Encode a parameter list to the query string</summary>
+
+```go
+u, err := url.Parse(`https://example.com/`)
+if err != nil {
+    panic(err)
+}
+params := Params{{"q", "100% truth"}, {"a", "1"}, {"b", "2"}}
+
+u.RawQuery = params.Encode()
+
+fmt.Println(u)
+```
+
+</details>
 
 
+<details>
+<summary>Sort parameters by key</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.Sort()
+u.RawQuery = params.Encode()
+fmt.Println(u)
+```
+
+</details>
+
+
+<details>
+<summary>Set a specific order for parameters</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&d=4&c=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.SetOrder("q", "d", "c", "b", "a")
+u.RawQuery = params.Encode()
+fmt.Println(u)
+```
+
+</details>
+
+
+<details>
+<summary>Add a parameter (multiple values)</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.Add("c", "3", "4")
+u.RawQuery = params.Encode()
+fmt.Println(u)
+```
+
+</details>
+
+
+<details>
+<summary>Set a new parameter</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&c=3&b=4`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.Set("b", "5")
+u.RawQuery = params.Encode()
+fmt.Println(u)
+```
+
+</details>
+
+
+<details>
+<summary>Get a parameter's value</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+val := params.Get("b")
+fmt.Println(val)
+```
+</details>
+
+
+<details>
+<summary>Get all parameter's values</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&a=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+values := params.GetAll("a")
+fmt.Println(values)
+```
+
+</details>
+
+<details>
+<summary>Extract a single parameter from list by key (get and remove)</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&a=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+val := params.Extract("a")
+u.RawQuery = params.Encode()
+
+fmt.Println(val)
+fmt.Println(u)
+```
+
+</details>
+
+<details>
+<summary>Extract all parameters from list by key</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&a=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+values := params.ExtractAll("a")
+u.RawQuery = params.Encode()
+
+fmt.Println(values)
+fmt.Println(u)
+```
+
+</details>
+
+<details>
+<summary>Delete a parameter by key</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&a=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.Delete("a")
+u.RawQuery = params.Encode()
+fmt.Println(u)
+```
+
+</details>
+
+<details>
+<summary>Delete all parameters by key</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2&a=3`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+params.DeleteAll("a")
+u.RawQuery = params.Encode()
+fmt.Println(u)
+
+```
+
+</details>
+
+
+<details>
+<summary>Check if parameter list has a parameter with a key</summary>
+
+```go
+u, err := url.Parse(`https://example.com/?q=100%25+truth&a=1&b=2`)
+if err != nil {
+    panic(err)
+}
+params, err := ParseQuery(u.RawQuery)
+if err != nil {
+    fmt.Println("Error:", err)
+}
+fmt.Println(params.Has("a"))
+fmt.Println(params.Has("c"))
+```
+
+</details>
 
 ## Benchmark
 
