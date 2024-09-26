@@ -36,7 +36,8 @@ Both the first and second approaches preserve the original order of the paramete
 
 ### Query string direct manipulation
 
-#### Get a parameter value
+<details>
+<summary>Get a parameter value</summary>
 
 ```go
 
@@ -53,7 +54,11 @@ if err != nil {
 fmt.Println(val)
 ```
 
-#### Get all parameter's values
+</details>
+
+
+<details>
+<summary>Get all parameter's values</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2&a=3&c=4")
@@ -69,7 +74,11 @@ fmt.Println(values)
 
 ```
 
-### Extract a parameter value
+</details>
+
+
+<details>
+<summary>Extract a parameter value</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2")
@@ -86,7 +95,11 @@ fmt.Println(val)
 fmt.Println(u)
 ```
 
-### Extract all parameter's values
+</details>
+
+
+<details>
+<summary>Extract all parameter's values</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2&a=3&c=4")
@@ -103,7 +116,11 @@ fmt.Println(values)
 fmt.Println(u)
 ```
 
-### Add a query parameter
+</details>
+
+<details>
+<summary>Add a query parameter</summary>
+
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2")
@@ -115,7 +132,11 @@ AddQueryParam(&u.RawQuery, "c", "3", "4")
 fmt.Println(u)
 ```
 
-### Set a query parameter
+</details>
+
+
+<details>
+<summary>Set a query parameter</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2&a=3&b=4")
@@ -126,7 +147,11 @@ SetQueryParam(&u.RawQuery, "b", "5")
 fmt.Println(u)
 ```
 
-### Delete a single value of query parameter
+</details>
+
+
+<details>
+<summary>Delete a single value of query parameter</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2&a=3&b=4")
@@ -138,7 +163,11 @@ DeleteQueryParam(&u.RawQuery, "a")
 fmt.Println(u)
 ```
 
-### Delete all parameters with the same name
+</details>
+
+
+<details>
+<summary>Delete all parameters with the same name</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2&a=3&b=4")
@@ -150,7 +179,14 @@ DeleteQueryParamAll(&u.RawQuery, "a")
 fmt.Println(u)
 ```
 
-### Check if query string contains a parameter
+</details>
+
+
+
+### 
+
+<details>
+<summary>Check if query string contains a parameter</summary>
 
 ```go
 u, err := url.Parse("https://example.com?a=1&b=2")
@@ -161,6 +197,10 @@ if err != nil {
 fmt.Println("a:", HasQueryParam(u.RawQuery, "a"))
 fmt.Println("c:", HasQueryParam(u.RawQuery, "c"))
 ```
+
+</details>
+
+
 
 
 ## Benchmark
