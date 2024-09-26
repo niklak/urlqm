@@ -133,23 +133,24 @@ func SetQueryParam(query *string, key string, value string) {
 	for after != "" {
 		var before string
 		before, after, _ = strings.Cut(after, key+"=")
+
+		before, sep := trimParamSeparator(before)
+
+		buf.WriteString(before)
 		if after == "" {
-			buf.WriteString(before)
 			break
 		}
 
-		before, sep := trimParamSeparator(before)
-		buf.WriteString(before)
-
 		_, after = cutStringByAnySep(after, separators)
 
-		if buf.Len() > 0 {
+		if buf.Len() > 0 && after != "" {
 			buf.WriteString(sep)
 		}
 		if !found {
 			found = true
 			writeParam(&buf, sep, key, value)
 			if after != "" {
+
 				buf.WriteString(sep)
 			}
 		}
