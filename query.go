@@ -222,7 +222,7 @@ func DeleteQueryParamAll(query *string, key string) {
 
 // HasQueryParam returns true if the query string contains a parameter with the given key.
 func HasQueryParam(query string, key string) bool {
-	return strings.Index(query, key+"=") > 0
+	return strings.Contains(query, key+"=")
 }
 
 func writeParam(buf *strings.Builder, sep, key string, values ...string) {

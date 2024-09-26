@@ -500,6 +500,11 @@ func TestHasQueryParam(t *testing.T) {
 			args: args{query: "%D1%81%D0%BB%D0%BE%D0%B2%D0%BE=%D0%BA%D1%96%D1%82", key: "слово"},
 			want: false,
 		},
+		{
+			name: "Found first",
+			args: args{query: "a=1&b=2&c=3", key: "a"},
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
