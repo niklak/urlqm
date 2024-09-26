@@ -3,6 +3,11 @@ package urlp
 // Params is a wrapper around []Param
 type Params []Param
 
+// ParseQuery takes a query string and returns a slice of [Param]. See [ParseParams].
+func ParseQuery(rawQuery string) (p Params, err error) {
+	return ParseParams(rawQuery)
+}
+
 // Encode transforms []Param into an url-encoded string and returns it.
 func (p *Params) Encode() (encode string) {
 	return EncodeParams(*p)
@@ -31,6 +36,34 @@ func (p *Params) Add(key string, values ...string) {
 	for _, value := range values {
 		*p = append(*p, Param{key, value})
 	}
+
+}
+
+// Set sets a param with given key and value.
+// It replaces any existing param with the same key.
+func (p *Params) Set(key, value string) {
+	if len(key) == 0 {
+		return
+	}
+
+	foundIdx := -1
+	for i := 0; i < len(*p); i++ {
+		if (*p)[i].Key == key {
+			if foundIdx == -1 {
+				// remember the first index we found.
+				foundIdx = i
+				continue
+			}
+			// in other case simply remove the param.
+			*p = append((*p)[:i], (*p)[i+1:]...)
+		}
+	}
+
+	if foundIdx > -1 {
+		(*p)[foundIdx] = Param{Key: key, Value: value}
+		return
+	}
+	*p = append(*p, Param{Key: key, Value: value})
 
 }
 
@@ -76,39 +109,6 @@ func (p *Params) ExtractAll(key string) (values []string) {
 		}
 	}
 	return values
-}
-
-// Set sets a param with given key and value.
-// It replaces any existing param with the same key.
-func (p *Params) Set(key, value string) {
-	if len(key) == 0 {
-		return
-	}
-
-	foundIdx := -1
-	for i := 0; i < len(*p); i++ {
-		if (*p)[i].Key == key {
-			if foundIdx == -1 {
-				// remember the first index we found.
-				foundIdx = i
-				continue
-			}
-			// in other case simply remove the param.
-			*p = append((*p)[:i], (*p)[i+1:]...)
-		}
-	}
-
-	if foundIdx > -1 {
-		(*p)[foundIdx] = Param{Key: key, Value: value}
-		return
-	}
-	*p = append(*p, Param{Key: key, Value: value})
-
-}
-
-// ParseQuery takes a query string and returns a slice of [Param]. See [ParseParams].
-func ParseQuery(rawQuery string) (p Params, err error) {
-	return ParseParams(rawQuery)
 }
 
 // Delete removes the first param with given key from the params slice and returns its value.
