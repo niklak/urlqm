@@ -1,5 +1,10 @@
 # URLQM (URL Query Manipulations)
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/niklak/urlqm.svg)](https://pkg.go.dev/github.com/niklak/urlqm)
+[![Go](https://github.com/niklak/urlqm/actions/workflows/go.yml/badge.svg)](https://github.com/niklak/urlqm/actions/workflows/go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/niklak/urlqm)](https://goreportcard.com/report/github.com/niklak/urlqm)
+[![codecov](https://codecov.io/gh/niklak/urlqm/graph/badge.svg?token=8XHKBAB0RQ)](https://codecov.io/gh/niklak/urlqm)
+
 >A small Go package for manipulating URL query parameters
 
 

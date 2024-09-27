@@ -37,25 +37,3 @@ func errorMerge(err error, err1 error) error {
 		return fmt.Errorf("%w; %w", err, err1)
 	}
 }
-
-func shouldEscapeByte(c byte) bool {
-	if 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9' {
-		return false
-	}
-
-	switch c {
-	case '-', '_', '.', '~':
-		return false
-	}
-
-	return true
-}
-
-func shouldQueryEscape(s string) bool {
-	for i := 0; i < len(s); i++ {
-		if shouldEscapeByte(s[i]) {
-			return true
-		}
-	}
-	return false
-}
