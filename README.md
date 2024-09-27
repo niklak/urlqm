@@ -36,20 +36,43 @@ Both the first and second approaches preserve the original order of the paramete
 
 ### Query string direct manipulation
 
+> [!NOTE]
+> Most of the query keys contain only ASCII characters, so it's fine to pass an unescaped key to a query function.
+> But if the key may contain non-ASCII characters, you should escape them before passing them to functions.
+> - GetQueryParam
+> - GetQueryParamAll
+> - ExtractQueryParam
+> - ExtractQueryParamAll
+> - DeleteQueryParam
+> - DeleteQueryParamAll
+> - HasQueryParam
+>
+> *So why this approach doesn't encode query keys by itself?* 
+>
+> Because it brings a little (very little) overhead even if the key doesn't contains non-ASCII characters.
+> There is an option to add a trailing argument encKey bool, which will encode the query keys by itself. But I'm still not sure about it.
+
 <details>
 <summary>Get a parameter value</summary>
 
 ```go
 
-u, err := url.Parse("https://example.com?a=1&b=2")
+rawURL := "https://example.com?a=1&b=2&%D0%BA%D0%BB%D1%8E%D1%87=%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F"
+u, err := url.Parse(rawURL)
 if err != nil {
     panic(err)
 }
-// there is no need to decode the whole query string
 val, err := GetQueryParam(u.RawQuery, "a")
 if err != nil {
     // handle this error
-    log.Println("Error:", err)
+    fmt.Println("Error:", err)
+}
+fmt.Println(val)
+
+// if the key contains non-ASCII characters, you must encode it before calling GetQueryParam
+val, err = GetQueryParam(u.RawQuery, url.QueryEscape("ключ"))
+if err != nil {
+    fmt.Println("Error:", err)
 }
 fmt.Println(val)
 ```

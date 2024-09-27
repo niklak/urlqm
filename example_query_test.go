@@ -7,17 +7,27 @@ import (
 )
 
 func ExampleGetQueryParam() {
-	u, err := url.Parse("https://example.com?a=1&b=2")
+	rawURL := "https://example.com?a=1&b=2&%D0%BA%D0%BB%D1%8E%D1%87=%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F"
+	u, err := url.Parse(rawURL)
 	if err != nil {
 		panic(err)
 	}
 	val, err := GetQueryParam(u.RawQuery, "a")
 	if err != nil {
 		// handle this error
-		log.Println("Error:", err)
+		fmt.Println("Error:", err)
 	}
 	fmt.Println(val)
-	// Output: 1
+
+	// if the key contains non-ASCII characters, you must encode it before calling GetQueryParam
+	val, err = GetQueryParam(u.RawQuery, url.QueryEscape("ключ"))
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	fmt.Println(val)
+	// Output:
+	// 1
+	// значення
 }
 
 func ExampleGetQueryParamAll() {

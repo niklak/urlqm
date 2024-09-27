@@ -6,6 +6,7 @@ import (
 )
 
 // ExtractQueryParam removes and returns the value of a parameter from the query string.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func ExtractQueryParam(query *string, key string) (value string, err error) {
 	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
@@ -35,6 +36,7 @@ func ExtractQueryParam(query *string, key string) (value string, err error) {
 }
 
 // ExtractQueryParamAll removes and returns a slice of values for a parameter from the query string.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func ExtractQueryParamAll(query *string, key string) (values []string, err error) {
 	var after string = *query
 
@@ -72,6 +74,7 @@ func ExtractQueryParamAll(query *string, key string) (values []string, err error
 }
 
 // GetQueryParam returns the value of a parameter from the query string.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func GetQueryParam(query string, key string) (value string, err error) {
 	_, after, _ := strings.Cut(query, key+"=")
 	//if the given param wasn't found or it was without value
@@ -85,6 +88,7 @@ func GetQueryParam(query string, key string) (value string, err error) {
 }
 
 // GetQueryParamAll returns the slice of values for a parameter from the query string.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func GetQueryParamAll(query, key string) (values []string, err error) {
 
 	for query != "" {
@@ -167,6 +171,7 @@ func SetQueryParam(query *string, key string, value string) {
 }
 
 // DeleteQueryParam removes a parameter from the query string by key.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func DeleteQueryParam(query *string, key string) {
 	before, after, _ := strings.Cut(*query, key+"=")
 	//if the given param wasn't found or it was without value
@@ -190,6 +195,7 @@ func DeleteQueryParam(query *string, key string) {
 }
 
 // DeleteQueryParamAll removes all parameters from the query string by key.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func DeleteQueryParamAll(query *string, key string) {
 	var after string = *query
 
@@ -221,6 +227,7 @@ func DeleteQueryParamAll(query *string, key string) {
 }
 
 // HasQueryParam returns true if the query string contains a parameter with the given key.
+// If the given key contains non-ASCII characters, it must be url-encoded before calling this function.
 func HasQueryParam(query string, key string) bool {
 	return strings.Contains(query, key+"=")
 }
@@ -245,4 +252,5 @@ func writeParam(buf *strings.Builder, sep, key string, values ...string) {
 	}
 }
 
-// TODO: decide what to do with key-encoding
+// TODO: github actions
+// TODO: pick up a package name
