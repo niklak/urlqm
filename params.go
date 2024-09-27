@@ -1,5 +1,5 @@
-// Package urlp implements an alternative approach to handle url query parameters.
-package urlp
+// Package urlqm implements an alternative approach to handle url query parameters.
+package urlqm
 
 import (
 	"net/url"
@@ -97,5 +97,3 @@ func SortParams(params []Param) {
 		return params[i].Key < params[j].Key
 	})
 }
-
-// TODO: readme

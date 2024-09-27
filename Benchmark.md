@@ -5,7 +5,7 @@ go version: go1.23.1 linux/amd64
 ```
 goos: linux
 goarch: amd64
-pkg: github.com/niklak/urlp
+pkg: github.com/niklak/urlqm
 cpu: AMD Ryzen 9 6900HX with Radeon Graphics
 ```
 

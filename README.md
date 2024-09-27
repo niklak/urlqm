@@ -1,11 +1,12 @@
-# urlp
-A small Go package for manipulating URL query parameters
+# URLQM (URL Query Manipulations)
+
+>A small Go package for manipulating URL query parameters
 
 
 ## Installation
 
 ```bash
-go get github.com/niklak/urlp
+go get github.com/niklak/urlqm
 ```
 
 

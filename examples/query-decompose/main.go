@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/niklak/urlp"
+	"github.com/niklak/urlqm"
 )
 
 func main() {
@@ -41,17 +41,17 @@ func main() {
 	// At this point we have an url with RawQuery and instead of parsing the whole query string,
 	// we can search for the key and parse the corresponding value.
 
-	q, err = urlp.GetQueryParam(u.RawQuery, "q")
+	q, err = urlqm.GetQueryParam(u.RawQuery, "q")
 	// Sometimes keys can be also encoded, so to find a value, you need search with encoded key:
-	//q, err = urlp.GetQueryParam(u.RawQuery, url.QueryEscape(`%22q%22`))
+	//q, err = urlqm.GetQueryParam(u.RawQuery, url.QueryEscape(`%22q%22`))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("q (urlp): %s\n", q)
+	fmt.Printf("q (urlqm): %s\n", q)
 
 	// If you sure that there are multiple values behind the same key, you can use GetQueryParamAll function to get all values for the key:
 
-	regionList, err := urlp.GetQueryParamAll(u.RawQuery, "region")
+	regionList, err := urlqm.GetQueryParamAll(u.RawQuery, "region")
 	if err != nil {
 		// the error appear only if the function is unable to decode the value.
 		panic(err)
@@ -66,39 +66,39 @@ func main() {
 	// u.RawQuery = query.Encode()
 
 	// We can do this:
-	urlp.DeleteQueryParam(&u.RawQuery, "some-hash")
+	urlqm.DeleteQueryParam(&u.RawQuery, "some-hash")
 
 	// If we need to delete all query parameters with same key, we can use DeleteQueryParamAll function:
-	urlp.DeleteQueryParamAll(&u.RawQuery, "region")
+	urlqm.DeleteQueryParamAll(&u.RawQuery, "region")
 
 	fmt.Println("URL after delete param:", u.String())
 
 	// To add a new parameter to the query string we can use AddQueryParam function:
 	// let's bring back our regions
-	urlp.AddQueryParam(&u.RawQuery, "region", "1")
+	urlqm.AddQueryParam(&u.RawQuery, "region", "1")
 	// It's possible to add multiple values for the same key:
-	urlp.AddQueryParam(&u.RawQuery, "region", "2", "3")
+	urlqm.AddQueryParam(&u.RawQuery, "region", "2", "3")
 
 	// If we want to get a value and remove it from query immediately, we can use ExtractQueryParam function,
 	// to take the first value with the key, and remove it from query string
-	region, _ := urlp.ExtractQueryParam(&u.RawQuery, "region")
+	region, _ := urlqm.ExtractQueryParam(&u.RawQuery, "region")
 	fmt.Println("extracted region:", region)
 	fmt.Printf("URL after extracting region parameter: %s\n", u.String())
 
 	// It is also possible to extract all values with by with same key:
-	regionList, _ = urlp.ExtractQueryParamAll(&u.RawQuery, "region")
+	regionList, _ = urlqm.ExtractQueryParamAll(&u.RawQuery, "region")
 	fmt.Println("extracted region list:", regionList)
 	fmt.Printf("URL after extracting every region parameter: %s\n", u.String())
 
 	// It is also possible to quickly check presence of the key, without parsing a whole query-string:
 
-	regionOk := urlp.HasQueryParam(u.RawQuery, "region")
+	regionOk := urlqm.HasQueryParam(u.RawQuery, "region")
 
 	if !regionOk {
-		// urlp.SetQueryParam can be used to set a parameter instead of query.Set().
+		// urlqm.SetQueryParam can be used to set a parameter instead of query.Set().
 		// It will replace any existing parameters with same key.
 		// It will also take place of the first appeared parameter with the same key.
-		urlp.SetQueryParam(&u.RawQuery, "region", "12")
+		urlqm.SetQueryParam(&u.RawQuery, "region", "12")
 		fmt.Println("URL after setting a new region parameter:", u.String())
 	}
 

@@ -1,4 +1,4 @@
-package urlp
+package urlqm
 
 import (
 	"errors"

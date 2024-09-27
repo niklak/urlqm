@@ -1,4 +1,4 @@
-package urlp
+package urlqm
 
 // Params is a wrapper around []Param
 type Params []Param

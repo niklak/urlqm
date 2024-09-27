@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/niklak/urlp"
+	"github.com/niklak/urlqm"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	fmt.Printf("Parsed Query: %#v\n", query)
 
 	// broken parameter `brightness` is kept as is
-	queryParams, err := urlp.ParseQuery(u.RawQuery)
+	queryParams, err := urlqm.ParseQuery(u.RawQuery)
 
 	if err != nil {
 		fmt.Printf("Error parsing query params: %s\n", err)
@@ -39,16 +39,16 @@ func main() {
 	u.RawQuery = query.Encode()
 	fmt.Printf("URL after std query encoding -- changed order: %s\n", u)
 
-	// `urlp.Params.Encode` will keep the original order, and encodes bad parameters
+	// `urlqm.Params.Encode` will keep the original order, and encodes bad parameters
 	u.RawQuery = queryParams.Encode()
-	fmt.Printf("URL after urlp params encoding: %s\n", u)
+	fmt.Printf("URL after urlqm params encoding: %s\n", u)
 
-	// With urlp you have a choice to sort or not to sort query parameters.
+	// With urlqm you have a choice to sort or not to sort query parameters.
 
 	// Simple sort by key
 	queryParams.Sort()
 	u.RawQuery = queryParams.Encode()
-	fmt.Printf("URL after urlp params sorting and encoding: %s\n", u)
+	fmt.Printf("URL after urlqm params sorting and encoding: %s\n", u)
 
 	//moving one parameter to the start
 	queryParams.SetOrder("q")
@@ -56,12 +56,12 @@ func main() {
 	// Or setting explicit order
 	queryParams.SetOrder("q", "region", "region", "region", "some-hash", "first", "brightness")
 	u.RawQuery = queryParams.Encode()
-	fmt.Printf("URL after urlp params setting order and encoding: %s\n", u)
+	fmt.Printf("URL after urlqm params setting order and encoding: %s\n", u)
 
 	// You can get parameter value
 	q := queryParams.Get("q")
 
-	fmt.Printf("q (urlp params): %s\n", q)
+	fmt.Printf("q (urlqm params): %s\n", q)
 
 	// Or get a list of parameter values
 	regionList := queryParams.GetAll("region")
